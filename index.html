@@ -148,6 +148,106 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     <div class="yl-tile"><p class="yl-tile-label">Newest film</p><p class="yl-tile-value dash-skeleton" data-draw="kpi" data-source="summary" data-field="newest_year" data-row="0">—</p></div>
   </section>
 
+  <style>
+    .yl-hero { position: relative; margin: 0 0 var(--cds-gap-xl); border-radius: var(--cds-radius); overflow: hidden; background: #111; aspect-ratio: 21 / 9; max-height: 30rem; width: 100%; }
+    @media (max-width: 40rem) { .yl-hero { aspect-ratio: 4 / 3; } }
+    .yl-hero-track { position: absolute; inset: 0; }
+    .yl-slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 600ms ease, visibility 0s linear 600ms; }
+    .yl-slide.on { opacity: 1; visibility: visible; transition: opacity 600ms ease; }
+    @media (prefers-reduced-motion: reduce) { .yl-slide, .yl-slide.on { transition: none; } }
+    .yl-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .yl-slide::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.82) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,0) 75%); pointer-events: none; }
+    .yl-slide-text { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 2.5rem) clamp(2.25rem, 4vw, 2.75rem); color: #fff; }
+    .yl-slide-kicker { font-size: var(--cds-font-size-caption); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 .35rem; opacity: .85; }
+    .yl-slide-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(1.5rem, 4vw, 2.6rem); line-height: 1.05; margin: 0 0 .4rem; color: #fff; }
+    .yl-slide-meta { font-size: var(--cds-font-size-body); margin: 0 0 .9rem; opacity: .9; }
+    .yl .yl-trailer { display: inline-flex; align-items: center; gap: .45rem; background: #fff; color: #111; text-decoration: none; font-weight: var(--cds-font-weight-medium); font-size: var(--cds-font-size-body); padding: .5rem .95rem; border-radius: 999px; }
+    .yl .yl-trailer:hover { background: #e9e9e9; }
+    .yl .yl-trailer:focus-visible, .yl-hero button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .yl-trailer svg { width: .9em; height: .9em; }
+    .yl-hero-nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 0; background: rgba(0,0,0,.45); color: #fff; font-size: 1.25rem; line-height: 1; cursor: pointer; display: grid; place-items: center; }
+    .yl-hero-nav:hover { background: rgba(0,0,0,.7); }
+    .yl-hero-nav.prev { left: .75rem; } .yl-hero-nav.next { right: .75rem; }
+    @media (max-width: 40rem) { .yl-hero-nav { top: .75rem; transform: none; width: 2.25rem; height: 2.25rem; } .yl-hero-nav.prev { left: auto; right: 3.5rem; } .yl-hero-credit { display: none; } }
+    .yl-hero-dots { position: absolute; z-index: 2; bottom: .9rem; right: clamp(1rem, 4vw, 2.5rem); display: flex; gap: .4rem; }
+    .yl-hero-dots button { width: .55rem; height: .55rem; padding: 0; border: 0; border-radius: 50%; background: rgba(255,255,255,.45); cursor: pointer; }
+    .yl-hero-dots button[aria-current="true"] { background: #fff; }
+    .yl-hero-credit { position: absolute; z-index: 2; top: .6rem; right: .8rem; font-size: 10px; color: rgba(255,255,255,.6); margin: 0; }
+  </style>
+
+  <section class="yl-hero dash-skeleton" aria-roledescription="carousel" aria-label="Our perfect 5.0 films" data-draw="hero" data-source="films"></section>
+
+  <script>
+    // Perfect-score banner. Any film with a 5.0 group average gets a slide; the still and
+    // trailer for each come from this list, keyed by TMDB id. A 5.0 film missing from the list is skipped.
+    window.ylHero = {
+      592:  { trailer: 'SVHxFobNr5U', image: 'images/the-conversation.jpg', pos: 'center 25%' },   // The Conversation (1974)
+      9693: { trailer: '3CdJYhtjEns', image: 'images/children-of-men.jpg', pos: 'center 8%' },   // Children of Men (2006)
+      582:  { trailer: 'n3_iLOp6IhM', image: 'images/the-lives-of-others.jpg', pos: 'center 20%' },   // The Lives of Others (2006)
+      1578: { trailer: 'sKYsthPi8I0', image: 'images/raging-bull.jpg', pos: 'center 30%' }    // Raging Bull (1980)
+    };
+    window.ylHeroState = { i: 0, timer: null, paused: false };
+
+    dash.draw('hero', (el) => {
+      if (!yl.ok(el, 'films')) return;
+      const films = dash.data('films').data
+        .filter((f) => +f.score >= 5 && ylHero[f.tmdb_id])
+        .sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      if (!films.length) { el.hidden = true; return; }
+      el.hidden = false; el.replaceChildren();
+      const st = ylHeroState; st.i = Math.min(st.i, films.length - 1);
+
+      const track = document.createElement('div'); track.className = 'yl-hero-track';
+      const slides = films.map((f, i) => {
+        const h = ylHero[f.tmdb_id];
+        const s = document.createElement('div'); s.className = 'yl-slide';
+        s.setAttribute('role', 'group'); s.setAttribute('aria-roledescription', 'slide');
+        s.setAttribute('aria-label', `${i + 1} of ${films.length}: ${f.film}`);
+        const img = document.createElement('img');
+        img.alt = ''; img.decoding = 'async'; if (h.pos) img.style.objectPosition = h.pos; img.loading = i === 0 ? 'eager' : 'lazy';
+        img.src = h.image || `https://i.ytimg.com/vi/${h.trailer}/maxresdefault.jpg`;
+        img.onerror = () => { if (!h.image && !img.dataset.fb) { img.dataset.fb = 1; img.src = `https://i.ytimg.com/vi/${h.trailer}/hqdefault.jpg`; } };
+        const t = document.createElement('div'); t.className = 'yl-slide-text';
+        const k = document.createElement('p'); k.className = 'yl-slide-kicker'; k.textContent = 'Perfect 5.0';
+        const ti = document.createElement('h2'); ti.className = 'yl-slide-title'; ti.textContent = f.film;
+        const m = document.createElement('p'); m.className = 'yl-slide-meta';
+        m.textContent = `${f.year} · ${f.director} · picked by ${f.picker}`;
+        const a = document.createElement('a'); a.className = 'yl-trailer';
+        a.href = `https://www.youtube.com/watch?v=${h.trailer}`; a.target = '_blank'; a.rel = 'noopener';
+        a.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>';
+        a.append('Watch trailer');
+        a.setAttribute('aria-label', `Watch the ${f.film} trailer on YouTube (opens in a new window)`);
+        t.append(k, ti, m, a); s.append(img, t); track.appendChild(s);
+        return s;
+      });
+
+      const dots = document.createElement('div'); dots.className = 'yl-hero-dots';
+      const dotBtns = films.map((f, i) => {
+        const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', `Show ${f.film}`);
+        b.onclick = () => { go(i); restart(); }; dots.appendChild(b); return b;
+      });
+      const nav = (cls, label, txt, d) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = `yl-hero-nav ${cls}`;
+        b.setAttribute('aria-label', label); b.textContent = txt; b.onclick = () => { go(st.i + d); restart(); }; return b;
+      };
+      const go = (i) => {
+        st.i = (i + films.length) % films.length;
+        slides.forEach((s, j) => { s.classList.toggle('on', j === st.i); s.setAttribute('aria-hidden', j === st.i ? 'false' : 'true');
+          s.querySelector('a').tabIndex = j === st.i ? 0 : -1; });
+        dotBtns.forEach((b, j) => b.setAttribute('aria-current', j === st.i ? 'true' : 'false'));
+      };
+      const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const restart = () => { clearInterval(st.timer); if (!reduce && films.length > 1) st.timer = setInterval(() => { if (!st.paused) go(st.i + 1); }, 7000); };
+
+      el.append(track);
+      if (films.length > 1) el.append(nav('prev', 'Previous film', '‹', -1), nav('next', 'Next film', '›', 1), dots);
+      el.onmouseenter = el.onfocusin = () => { st.paused = true; };
+      el.onmouseleave = el.onfocusout = () => { st.paused = false; };
+      el.onkeydown = (e) => { if (e.key === 'ArrowLeft') { go(st.i - 1); restart(); } if (e.key === 'ArrowRight') { go(st.i + 1); restart(); } };
+      go(st.i); restart();
+    });
+  </script>
+
   <h2 class="yl-section" id="best-worst">The best and the worst</h2>
   <div class="yl-grid">
     <div class="yl-card">
