@@ -133,6 +133,8 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
   .yl-page-films .yl-tablebox { max-height: none; overflow: visible; }
   .yl-page-films td.film a.yl-link { text-decoration-color: currentColor; }
   .yl-page-films td.film a.yl-link:hover { text-decoration-thickness: 2px; }
+  .yl a.yl-home-link { color: inherit; text-decoration: none; }
+  .yl a.yl-home-link:hover { text-decoration: underline; text-underline-offset: 2px; }
 </style>
 
 <div class="yl yl-page-films">
@@ -204,7 +206,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
   </script>
 
   <header class="yl-head" id="top">
-    <p class="yl-kicker">2Yutes, 2Lagoon</p>
+    <p class="yl-kicker"><a class="yl-home-link" href="index.html">2Yutes, 2Lagoon</a></p>
     <h1 class="yl-title">All films</h1>
     <p class="yl-take">All <b data-draw="kpi" data-source="summary" data-field="films" data-row="0" class="dash-skeleton">—</b> films from <b data-draw="kpi" data-source="summary" data-field="rounds" data-row="0" class="dash-skeleton">—</b> rounds, ranked by the club’s score. Search by title, director or picker, pick a round, or click a column to sort.</p>
   </header>
