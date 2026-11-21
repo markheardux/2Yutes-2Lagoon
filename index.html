@@ -133,6 +133,73 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
 </style>
 
 <div class="yl">
+  <style>
+    .yl-topbar { display: flex; align-items: center; gap: var(--cds-gap-sm); margin: 0 0 var(--cds-gap-md); }
+    .yl-burger { all: unset; box-sizing: border-box; cursor: pointer; width: 2.75rem; height: 2.75rem; margin-left: -.6rem; border-radius: var(--cds-radius); display: grid; place-items: center; color: var(--color-fg); }
+    .yl-burger:hover { background: var(--color-panel); }
+    .yl-burger:focus-visible, .yl-drawer a:focus-visible, .yl-drawer-close:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+    .yl-burger svg { width: 1.4rem; height: 1.4rem; }
+    .yl-scrim { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.4); opacity: 0; visibility: hidden; transition: opacity 250ms ease, visibility 0s linear 250ms; }
+    .yl-drawer { position: fixed; z-index: 51; top: 0; left: 0; bottom: 0; width: min(19rem, 82vw); background: var(--color-bg); border-right: 1px solid var(--color-border-line); box-shadow: 0 0 2rem rgba(0,0,0,.18);
+      transform: translateX(-100%); visibility: hidden; transition: transform 250ms ease, visibility 0s linear 250ms; display: flex; flex-direction: column; padding: var(--cds-pad-lg); box-sizing: border-box; font-family: var(--font-anthropic-sans); }
+    .yl-nav-open .yl-scrim { opacity: 1; visibility: visible; transition: opacity 250ms ease; }
+    .yl-nav-open .yl-drawer { transform: none; visibility: visible; transition: transform 250ms ease; }
+    @media (prefers-reduced-motion: reduce) { .yl-scrim, .yl-drawer, .yl-nav-open .yl-scrim, .yl-nav-open .yl-drawer { transition: none; } }
+    .yl-drawer-head { display: flex; align-items: center; justify-content: space-between; margin: 0 0 var(--cds-gap-lg); }
+    .yl-drawer-title { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-title); font-weight: 400; margin: 0; color: var(--color-fg); }
+    .yl-drawer-close { all: unset; cursor: pointer; width: 2.5rem; height: 2.5rem; margin-right: -.6rem; display: grid; place-items: center; border-radius: var(--cds-radius); font-size: 1.5rem; line-height: 1; color: var(--color-fg-muted); }
+    .yl-drawer-close:hover { background: var(--color-panel); color: var(--color-fg); }
+    .yl-drawer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
+    .yl-drawer a { display: block; padding: .7rem .8rem; margin: 0 -.8rem; border-radius: var(--cds-radius); color: var(--color-fg); text-decoration: none; font-size: var(--cds-font-size-heading); }
+    .yl-drawer a:hover { background: var(--color-panel); }
+    .yl-drawer a[aria-current="page"] { background: var(--color-panel); font-weight: var(--cds-font-weight-medium); }
+    .yl-drawer a small { display: block; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-weight: 400; margin-top: .1rem; }
+    body.yl-nav-open { overflow: hidden; }
+  </style>
+
+  <nav class="yl-topbar" aria-label="Site">
+    <button type="button" class="yl-burger" aria-label="Open menu" aria-expanded="false" aria-controls="yl-drawer">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+  </nav>
+  <div class="yl-scrim" aria-hidden="true"></div>
+  <div class="yl-drawer" id="yl-drawer" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="yl-drawer-head">
+      <p class="yl-drawer-title">2Yutes, 2Lagoon</p>
+      <button type="button" class="yl-drawer-close" aria-label="Close menu">×</button>
+    </div>
+    <ul>
+      <li><a href="./" data-page="home">Home<small>Club stats and charts</small></a></li>
+      <li><a href="films.html" data-page="films">All Films<small>Every film we’ve watched, ranked</small></a></li>
+    </ul>
+  </div>
+
+  <script>
+    (() => {
+      const page = 'home';
+      const burger = document.querySelector('.yl-burger'), drawer = document.getElementById('yl-drawer');
+      const scrim = document.querySelector('.yl-scrim'), close = drawer.querySelector('.yl-drawer-close');
+      drawer.querySelectorAll('a').forEach((a) => { if (a.dataset.page === page) a.setAttribute('aria-current', 'page'); });
+      const set = (open) => {
+        document.body.classList.toggle('yl-nav-open', open);
+        burger.setAttribute('aria-expanded', String(open));
+        if (open) (drawer.querySelector('a[aria-current]') || drawer.querySelector('a')).focus(); else burger.focus();
+      };
+      burger.addEventListener('click', () => set(true));
+      close.addEventListener('click', () => set(false));
+      scrim.addEventListener('click', () => set(false));
+      document.addEventListener('keydown', (e) => {
+        if (!document.body.classList.contains('yl-nav-open')) return;
+        if (e.key === 'Escape') set(false);
+        if (e.key === 'Tab') { // keep focus inside the open menu
+          const f = [...drawer.querySelectorAll('a, button')]; const i = f.indexOf(document.activeElement);
+          if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+          else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+        }
+      });
+    })();
+  </script>
+
   <header class="yl-head" id="top">
     <p class="yl-kicker">Film club statistics</p>
     <h1 class="yl-title">2Yutes, 2Lagoon</h1>
@@ -378,29 +445,6 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       <table data-source="composers_repeat" data-row-key="composer"><thead><tr><th data-field="composer"><button type="button">Composer</button></th><th data-field="films" class="num"><button type="button">Films</button></th><th data-field="avg_score" class="num"><button type="button">Avg.</button></th><th data-field="titles"><button type="button">Titles</button></th></tr></thead><tbody data-draw="composertable"></tbody></table>
     </div>
   </div>
-  <h2 class="yl-section" id="all-films">Every film</h2>
-  <div class="yl-card tablecard">
-    <p class="yl-note">Search by title, director or picker; click a column to sort. Each title opens the film on TMDB.</p>
-    <div class="yl-toolbar">
-      <input type="search" class="yl-search" placeholder="Search films, directors, pickers" aria-label="Search films">
-      <select data-draw="roundpick" data-source="by_round" aria-label="Round"></select>
-    </div>
-    <div class="yl-tablebox">
-      <table data-source="films" data-row-key="film_id" class="yl-films">
-        <thead><tr>
-          <th data-field="film"><button type="button">Film</button></th>
-          <th data-field="year" class="num"><button type="button">Year</button></th>
-          <th data-field="director" class="yl-hide-narrow"><button type="button">Director</button></th>
-          <th data-field="picker"><button type="button">Picked by</button></th>
-          <th data-field="round" class="num yl-hide-narrow"><button type="button">Round</button></th>
-          <th data-field="date" class="yl-hide-narrow"><button type="button">Watched</button></th>
-          <th data-field="score" class="num"><button type="button">Score</button></th>
-        </tr></thead>
-        <tbody data-draw="filmtable"></tbody>
-      </table>
-    </div>
-  </div>
-
   <p class="yl-foot">Scores are the group averages from the sheet. The bonus Halloween round is left out, as the sheet says it doesn’t count. In Round 1 the sheet’s averages leave out Mason’s scores, so the film scores here do too, but his ratings still count in the critic stats. Cast, cinematographer and film links come from <a class="yl-link" href="https://www.themoviedb.org/">TMDB</a>; this site uses TMDB data but is not endorsed or certified by TMDB.</p>
 </div>
 
