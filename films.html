@@ -160,6 +160,12 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     .yl-drawer a[aria-current="page"] { background: var(--color-panel); font-weight: var(--cds-font-weight-medium); }
     .yl-drawer a small { display: block; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-weight: 400; margin-top: .1rem; }
     body.yl-nav-open { overflow: hidden; }
+    .yl-drawer { overflow-y: auto; }
+    .yl-drawer ul.yl-subnav { gap: 0; margin: .15rem 0 .4rem; padding-left: .8rem; border-left: 1px solid var(--color-border-line); }
+    .yl-drawer ul.yl-subnav a { font-size: var(--cds-font-size-body); padding: .4rem .8rem; margin: 0; color: var(--color-fg-muted); }
+    .yl-drawer ul.yl-subnav a:hover { color: var(--color-fg); }
+    .yl-drawer ul.yl-subnav a[aria-current="page"] { color: var(--color-fg); }
+    .yl-subnav-label { margin: .5rem 0 .1rem .8rem; font-size: var(--cds-font-size-caption); text-transform: uppercase; letter-spacing: .06em; color: var(--color-fg-muted); }
   </style>
 
   <nav class="yl-topbar" aria-label="Site">
@@ -175,7 +181,29 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     </div>
     <ul>
       <li><a href="./" data-page="home">Home<small>Club stats and charts</small></a></li>
-      <li><a href="films.html" data-page="films">All Films<small>Every film we’ve watched, ranked</small></a></li>
+      <li><a href="films.html" data-page="films">All Films<small>Every film we’ve watched, ranked</small></a>
+        <p class="yl-subnav-label" id="yl-genre-label">By genre</p>
+        <ul class="yl-subnav" aria-labelledby="yl-genre-label">
+          <li><a href="films.html?genre=Action" data-genre="Action">Action</a></li>
+          <li><a href="films.html?genre=Adventure" data-genre="Adventure">Adventure</a></li>
+          <li><a href="films.html?genre=Animation" data-genre="Animation">Animation</a></li>
+          <li><a href="films.html?genre=Comedy" data-genre="Comedy">Comedy</a></li>
+          <li><a href="films.html?genre=Crime" data-genre="Crime">Crime</a></li>
+          <li><a href="films.html?genre=Documentary" data-genre="Documentary">Documentary</a></li>
+          <li><a href="films.html?genre=Drama" data-genre="Drama">Drama</a></li>
+          <li><a href="films.html?genre=Family" data-genre="Family">Family</a></li>
+          <li><a href="films.html?genre=Fantasy" data-genre="Fantasy">Fantasy</a></li>
+          <li><a href="films.html?genre=History" data-genre="History">History</a></li>
+          <li><a href="films.html?genre=Horror" data-genre="Horror">Horror</a></li>
+          <li><a href="films.html?genre=Music" data-genre="Music">Music</a></li>
+          <li><a href="films.html?genre=Mystery" data-genre="Mystery">Mystery</a></li>
+          <li><a href="films.html?genre=Romance" data-genre="Romance">Romance</a></li>
+          <li><a href="films.html?genre=Science%20Fiction" data-genre="Science Fiction">Science Fiction</a></li>
+          <li><a href="films.html?genre=Thriller" data-genre="Thriller">Thriller</a></li>
+          <li><a href="films.html?genre=War" data-genre="War">War</a></li>
+          <li><a href="films.html?genre=Western" data-genre="Western">Western</a></li>
+        </ul>
+      </li>
     </ul>
   </div>
 
@@ -184,7 +212,12 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const page = 'films';
       const burger = document.querySelector('.yl-burger'), drawer = document.getElementById('yl-drawer');
       const scrim = document.querySelector('.yl-scrim'), close = drawer.querySelector('.yl-drawer-close');
-      drawer.querySelectorAll('a').forEach((a) => { if (a.dataset.page === page) a.setAttribute('aria-current', 'page'); });
+      const genre = page === 'films' ? new URLSearchParams(location.search).get('genre') : null;
+      window.ylNavMark = (g) => drawer.querySelectorAll('a').forEach((a) => {
+        const on = a.dataset.genre != null ? (page === 'films' && a.dataset.genre === g) : (a.dataset.page === page && !(page === 'films' && g));
+        if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+      });
+      ylNavMark(genre);
       const set = (open) => {
         document.body.classList.toggle('yl-nav-open', open);
         burger.setAttribute('aria-expanded', String(open));
@@ -207,14 +240,16 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
 
   <header class="yl-head" id="top">
     <p class="yl-kicker"><a class="yl-home-link" href="index.html">2Yutes, 2Lagoon</a></p>
-    <h1 class="yl-title">All films</h1>
-    <p class="yl-take">All <b data-draw="kpi" data-source="summary" data-field="films" data-row="0" class="dash-skeleton">—</b> films from <b data-draw="kpi" data-source="summary" data-field="rounds" data-row="0" class="dash-skeleton">—</b> rounds, ranked by the club’s score. Search by title, director or picker, pick a round, or click a column to sort.</p>
+    <h1 class="yl-title" id="yl-films-title">All films</h1>
+    <p class="yl-take" id="yl-genre-take" hidden></p>
+    <p class="yl-take" id="yl-all-take">All <b data-draw="kpi" data-source="summary" data-field="films" data-row="0" class="dash-skeleton">—</b> films from <b data-draw="kpi" data-source="summary" data-field="rounds" data-row="0" class="dash-skeleton">—</b> rounds, ranked by the club’s score. Search by title, director or picker, pick a round, or click a column to sort.</p>
   </header>
 
   <div class="yl-card tablecard">
     <p class="yl-note">Click a title for the film’s page, with its trailer and reviews.</p>
     <div class="yl-toolbar">
       <input type="search" class="yl-search" placeholder="Search films, directors, pickers" aria-label="Search films">
+      <select class="yl-genrepick" aria-label="Genre"><option value="">All genres</option><option value="Action">Action</option><option value="Adventure">Adventure</option><option value="Animation">Animation</option><option value="Comedy">Comedy</option><option value="Crime">Crime</option><option value="Documentary">Documentary</option><option value="Drama">Drama</option><option value="Family">Family</option><option value="Fantasy">Fantasy</option><option value="History">History</option><option value="Horror">Horror</option><option value="Music">Music</option><option value="Mystery">Mystery</option><option value="Romance">Romance</option><option value="Science Fiction">Science Fiction</option><option value="Thriller">Thriller</option><option value="War">War</option><option value="Western">Western</option></select>
       <select data-draw="roundpick" data-source="by_round" aria-label="Round"></select>
     </div>
     <div class="yl-tablebox">
@@ -556,7 +591,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
 <script>
   // Sortable tables and the search box.
   window.ylSort = { critictable: { key: 'avg_given', dir: -1 }, dirtable: { key: 'films', dir: -1 }, actortable: { key: 'films', dir: -1 }, dptable: { key: 'films', dir: -1 }, composertable: { key: 'films', dir: -1 }, genretable: { key: 'films', dir: -1 }, filmtable: { key: 'score', dir: -1 } };
-  window.ylQuery = { text: '', round: '' };
+  window.ylQuery = { text: '', round: '', genre: new URLSearchParams(location.search).get('genre') || '' };
   const numeric = new Set(['ratings', 'avg_given', 'vs_room', 'fives', 'films', 'avg_score', 'year', 'round', 'score', 'share']);
 
   document.querySelectorAll('table').forEach((table) => {
@@ -625,10 +660,24 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     sel.value = ylQuery.round;
     sel.onchange = () => { ylQuery.round = sel.value; dash.draw('filmtable'); };
   });
+  window.ylGenreHead = (n) => {
+    const g = ylQuery.genre, t = document.getElementById('yl-films-title'), gt = document.getElementById('yl-genre-take'), at = document.getElementById('yl-all-take');
+    t.textContent = g || 'All films'; gt.hidden = !g; at.hidden = !!g;
+    if (g) { gt.replaceChildren(`${n} ${n === 1 ? 'film' : 'films'} tagged ${g} on TMDB, ranked by the club’s score. `); const a = document.createElement('a'); a.href = 'films.html'; a.className = 'yl-link'; a.textContent = 'See all films'; a.onclick = (e) => { e.preventDefault(); ylSetGenre(''); }; gt.append(a); }
+    document.title = (g ? `${g} films` : 'All films') + ' · 2Yutes, 2Lagoon';
+  };
+  window.ylSetGenre = (g) => {
+    ylQuery.genre = g; document.querySelectorAll('.yl-genrepick').forEach((s) => { s.value = g; });
+    history.replaceState(null, '', g ? `films.html?genre=${encodeURIComponent(g)}` : 'films.html');
+    if (window.ylNavMark) ylNavMark(g); dash.draw('filmtable');
+  };
+  document.querySelectorAll('.yl-genrepick').forEach((s) => { s.value = ylQuery.genre; if (s.value !== ylQuery.genre) ylQuery.genre = ''; s.onchange = () => ylSetGenre(s.value); });
   dash.draw('filmtable', (tb) => {
     const d = dash.data('films'); if (d.status !== 'ok') { tb.replaceChildren(); return; }
     const q = ylQuery.text;
-    const rows = d.data.filter((f) => (!ylQuery.round || String(f.round) === ylQuery.round) &&
+    const g = dash.data('genres'); const inGenre = ylQuery.genre && g.status === 'ok' ? new Set(g.data.filter((r) => r.genre === ylQuery.genre).map((r) => r.film_id)) : null;
+    ylGenreHead(inGenre ? inGenre.size : 0);
+    const rows = d.data.filter((f) => (!inGenre || inGenre.has(f.film_id)) && (!ylQuery.round || String(f.round) === ylQuery.round) &&
       (!q || `${f.film} ${f.director} ${f.picker}`.toLowerCase().includes(q)));
     const tmdb = (f) => (f.tmdb_id ? `https://www.themoviedb.org/movie/${encodeURIComponent(f.tmdb_id)}` : `https://www.themoviedb.org/search/movie?query=${encodeURIComponent(f.film)}`);
     fill(tb, sorted(rows, 'filmtable'), [['film', null, 'film', (f) => `film.html?id=${encodeURIComponent(f.film_id)}`], ['year', null, 'num'], ['director', null, 'yl-hide-narrow'], ['picker'], ['round', null, 'num yl-hide-narrow'], ['date', (v) => d3.utcFormat('%b %-d, %Y')(new Date(v)), 'yl-hide-narrow'], ['score', yl.f2, 'num']], 'film_id');

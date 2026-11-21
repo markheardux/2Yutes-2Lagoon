@@ -155,6 +155,12 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     .yl-drawer a[aria-current="page"] { background: var(--color-panel); font-weight: var(--cds-font-weight-medium); }
     .yl-drawer a small { display: block; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-weight: 400; margin-top: .1rem; }
     body.yl-nav-open { overflow: hidden; }
+    .yl-drawer { overflow-y: auto; }
+    .yl-drawer ul.yl-subnav { gap: 0; margin: .15rem 0 .4rem; padding-left: .8rem; border-left: 1px solid var(--color-border-line); }
+    .yl-drawer ul.yl-subnav a { font-size: var(--cds-font-size-body); padding: .4rem .8rem; margin: 0; color: var(--color-fg-muted); }
+    .yl-drawer ul.yl-subnav a:hover { color: var(--color-fg); }
+    .yl-drawer ul.yl-subnav a[aria-current="page"] { color: var(--color-fg); }
+    .yl-subnav-label { margin: .5rem 0 .1rem .8rem; font-size: var(--cds-font-size-caption); text-transform: uppercase; letter-spacing: .06em; color: var(--color-fg-muted); }
   </style>
 
   <nav class="yl-topbar" aria-label="Site">
@@ -170,7 +176,29 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     </div>
     <ul>
       <li><a href="./" data-page="home">Home<small>Club stats and charts</small></a></li>
-      <li><a href="films.html" data-page="films">All Films<small>Every film we’ve watched, ranked</small></a></li>
+      <li><a href="films.html" data-page="films">All Films<small>Every film we’ve watched, ranked</small></a>
+        <p class="yl-subnav-label" id="yl-genre-label">By genre</p>
+        <ul class="yl-subnav" aria-labelledby="yl-genre-label">
+          <li><a href="films.html?genre=Action" data-genre="Action">Action</a></li>
+          <li><a href="films.html?genre=Adventure" data-genre="Adventure">Adventure</a></li>
+          <li><a href="films.html?genre=Animation" data-genre="Animation">Animation</a></li>
+          <li><a href="films.html?genre=Comedy" data-genre="Comedy">Comedy</a></li>
+          <li><a href="films.html?genre=Crime" data-genre="Crime">Crime</a></li>
+          <li><a href="films.html?genre=Documentary" data-genre="Documentary">Documentary</a></li>
+          <li><a href="films.html?genre=Drama" data-genre="Drama">Drama</a></li>
+          <li><a href="films.html?genre=Family" data-genre="Family">Family</a></li>
+          <li><a href="films.html?genre=Fantasy" data-genre="Fantasy">Fantasy</a></li>
+          <li><a href="films.html?genre=History" data-genre="History">History</a></li>
+          <li><a href="films.html?genre=Horror" data-genre="Horror">Horror</a></li>
+          <li><a href="films.html?genre=Music" data-genre="Music">Music</a></li>
+          <li><a href="films.html?genre=Mystery" data-genre="Mystery">Mystery</a></li>
+          <li><a href="films.html?genre=Romance" data-genre="Romance">Romance</a></li>
+          <li><a href="films.html?genre=Science%20Fiction" data-genre="Science Fiction">Science Fiction</a></li>
+          <li><a href="films.html?genre=Thriller" data-genre="Thriller">Thriller</a></li>
+          <li><a href="films.html?genre=War" data-genre="War">War</a></li>
+          <li><a href="films.html?genre=Western" data-genre="Western">Western</a></li>
+        </ul>
+      </li>
     </ul>
   </div>
 
@@ -179,7 +207,12 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const page = 'film';
       const burger = document.querySelector('.yl-burger'), drawer = document.getElementById('yl-drawer');
       const scrim = document.querySelector('.yl-scrim'), close = drawer.querySelector('.yl-drawer-close');
-      drawer.querySelectorAll('a').forEach((a) => { if (a.dataset.page === page) a.setAttribute('aria-current', 'page'); });
+      const genre = page === 'films' ? new URLSearchParams(location.search).get('genre') : null;
+      window.ylNavMark = (g) => drawer.querySelectorAll('a').forEach((a) => {
+        const on = a.dataset.genre != null ? (page === 'films' && a.dataset.genre === g) : (a.dataset.page === page && !(page === 'films' && g));
+        if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+      });
+      ylNavMark(genre);
       const set = (open) => {
         document.body.classList.toggle('yl-nav-open', open);
         burger.setAttribute('aria-expanded', String(open));
