@@ -259,6 +259,105 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     })();
   </script>
 
+  <style>
+    .yl-ss { position: relative; margin-left: auto; width: min(22rem, 100%); flex: 0 1 22rem; font-family: var(--font-anthropic-sans); }
+    .yl-ss-box { display: flex; align-items: center; gap: .5rem; height: 2.5rem; padding: 0 .85rem; border: 1px solid var(--color-border-line); border-radius: 999px; background: var(--color-panel); color: var(--color-fg-muted); box-sizing: border-box; }
+    .yl-ss-box:focus-within { border-color: var(--color-fg-muted); outline: 2px solid var(--color-fg); outline-offset: 1px; }
+    .yl-ss-box svg { width: 1rem; height: 1rem; flex: none; }
+    .yl-ss input { all: unset; flex: 1; min-width: 0; font-size: var(--cds-font-size-body); color: var(--color-fg); }
+    .yl-ss input::placeholder { color: var(--color-fg-muted); }
+    .yl-ss input::-webkit-search-cancel-button { -webkit-appearance: none; }
+    .yl-ss-list { position: absolute; z-index: 40; top: calc(100% + .4rem); right: 0; width: min(28rem, calc(100vw - 2rem)); max-height: min(70vh, 32rem); overflow-y: auto; margin: 0; padding: .35rem; list-style: none; box-sizing: border-box;
+      background: var(--cds-surface-popover); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); }
+    .yl-ss-list[hidden] { display: none; }
+    .yl-ss-list li { margin: 0; }
+    .yl-ss-list a { display: grid; grid-template-columns: 4.5rem 1fr; gap: .75rem; align-items: center; padding: .45rem; border-radius: calc(var(--cds-radius) - 4px); color: var(--color-fg); text-decoration: none; }
+    .yl-ss-list li[aria-selected="true"] a, .yl-ss-list a:hover { background: var(--color-bg); }
+    .yl-ss-list img, .yl-ss-thumb { width: 4.5rem; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; background: var(--color-border-line); display: block; }
+    .yl-ss-t { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); line-height: 1.25; }
+    .yl-ss-m { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-top: .1rem; line-height: 1.35; }
+    .yl-ss-m b { font-weight: var(--cds-font-weight-medium); color: var(--color-fg); }
+    .yl-ss-s { font-variant-numeric: tabular-nums; }
+    .yl-ss-empty, .yl-ss-all a { display: block; padding: .6rem .5rem; font-size: var(--cds-font-size-body); color: var(--color-fg-muted); }
+    .yl-ss-all a { grid-template-columns: none; text-decoration: underline; text-underline-offset: 2px; }
+    @media (max-width: 40rem) { .yl-ss { flex: 1 1 auto; } .yl-ss-list { right: -.5rem; } }
+  </style>
+  <script>
+    // yl-site-search: the search box in the top bar on every page. Results come from /search.json,
+    // fetched the first time the box is used. Matches titles, directors, pickers, cast, crew, genres and years.
+    (() => {
+      const bar = document.querySelector('.yl-topbar'); if (!bar || bar.querySelector('.yl-ss')) return;
+      const wrap = document.createElement('div'); wrap.className = 'yl-ss';
+      wrap.innerHTML = `<form class="yl-ss-box" role="search" action="/films.html">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input type="search" name="q" placeholder="Search films, people, genres" autocomplete="off" spellcheck="false"
+            role="combobox" aria-label="Search the site" aria-expanded="false" aria-controls="yl-ss-list" aria-autocomplete="list">
+        </form>
+        <ul class="yl-ss-list" id="yl-ss-list" role="listbox" aria-label="Search results" hidden></ul>`;
+      bar.append(wrap);
+      const input = wrap.querySelector('input'), list = wrap.querySelector('ul'), form = wrap.querySelector('form');
+      let idx = null, loading = null, hits = [], sel = -1;
+      const norm = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+      const load = () => loading || (loading = fetch('/search.json').then((r) => r.json()).then((d) => {
+        idx = d.map((f) => ({ ...f, _t: norm(f.title), _all: [['Director', f.director], ['Picked by', f.picker], ['Year', String(f.year)],
+          ...f.cast.map((c) => ['Cast', c]), ...f.crew.map(([k, v]) => [k, v]), ...f.genres.map((g) => ['Genre', g])].map(([k, v]) => [k, v, norm(v)]) }));
+      }).catch(() => { loading = null; }));
+      const open = (on) => { list.hidden = !on; input.setAttribute('aria-expanded', String(on)); if (!on) { sel = -1; input.removeAttribute('aria-activedescendant'); } };
+      const search = (q) => {
+        const qn = norm(q.trim()); if (!qn) return [];
+        const words = qn.split(/\s+/);
+        return idx.map((f) => {
+          let score = 0, why = null;
+          if (f._t === qn) score = 100; else if (f._t.startsWith(qn)) score = 80; else if (f._t.includes(qn)) score = 60;
+          else if (words.every((w) => f._t.includes(w))) score = 50;
+          if (score < 60) for (const [k, v, n] of f._all) {
+            const s = n === qn ? 45 : n.startsWith(qn) || n.includes(' ' + qn) ? 40 : n.includes(qn) ? 30 : 0;
+            if (s > score) { score = s; why = [k, v]; }
+          }
+          return { f, score, why };
+        }).filter((h) => h.score > 0).sort((a, b) => b.score - a.score || b.f.score - a.f.score).slice(0, 8);
+      };
+      const render = () => {
+        const q = input.value.trim(); list.replaceChildren(); sel = -1;
+        if (!q || !idx) { open(false); return; }
+        hits = search(q);
+        hits.forEach((h, i) => {
+          const li = document.createElement('li'); li.id = `yl-ss-${i}`; li.setAttribute('role', 'option'); li.setAttribute('aria-selected', 'false');
+          const a = document.createElement('a'); a.href = `/film/${h.f.slug}/`; a.tabIndex = -1;
+          const im = h.f.image ? Object.assign(document.createElement('img'), { src: '/' + h.f.image, alt: '', loading: 'lazy' }) : Object.assign(document.createElement('span'), { className: 'yl-ss-thumb' });
+          if (h.f.pos && im.style) im.style.objectPosition = h.f.pos;
+          const tx = document.createElement('div');
+          const t = document.createElement('div'); t.className = 'yl-ss-t'; t.textContent = h.f.title;
+          const m = document.createElement('div'); m.className = 'yl-ss-m';
+          m.append(`${h.f.year} · ${h.f.director} · `); const sc = document.createElement('span'); sc.className = 'yl-ss-s'; sc.textContent = `${h.f.score.toFixed(2)}/5`; m.append(sc);
+          if (h.why) { const w = document.createElement('div'); w.className = 'yl-ss-m'; w.append(`${h.why[0]}: `); const b = document.createElement('b'); b.textContent = h.why[1]; w.append(b); tx.append(t, m, w); } else tx.append(t, m);
+          a.append(im, tx); li.append(a); list.append(li);
+        });
+        if (!hits.length) { const li = document.createElement('li'); li.className = 'yl-ss-empty'; li.textContent = `No films match “${q}”.`; list.append(li); }
+        const all = document.createElement('li'); all.className = 'yl-ss-all';
+        const aa = document.createElement('a'); aa.href = `/films.html?q=${encodeURIComponent(q)}`; aa.tabIndex = -1; aa.textContent = 'Search the full film list'; all.append(aa); list.append(all);
+        open(true);
+      };
+      const move = (d) => {
+        if (!hits.length) return;
+        sel += d; if (sel >= hits.length) sel = -1; if (sel < -1) sel = hits.length - 1;
+        list.querySelectorAll('[role=option]').forEach((li, i) => li.setAttribute('aria-selected', String(i === sel)));
+        if (sel >= 0) { input.setAttribute('aria-activedescendant', `yl-ss-${sel}`); document.getElementById(`yl-ss-${sel}`).scrollIntoView({ block: 'nearest' }); }
+        else input.removeAttribute('aria-activedescendant');
+      };
+      input.addEventListener('focus', () => { load().then(() => { if (input.value.trim()) render(); }); });
+      input.addEventListener('input', () => { if (idx) render(); else load().then(render); });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); if (list.hidden) render(); else move(1); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+        else if (e.key === 'Escape') { if (!list.hidden) { e.preventDefault(); open(false); } else input.value = ''; }
+        else if (e.key === 'Enter' && sel >= 0 && hits[sel]) { e.preventDefault(); location.href = `/film/${hits[sel].f.slug}/`; }
+      });
+      form.addEventListener('submit', (e) => { if (!input.value.trim()) e.preventDefault(); });
+      document.addEventListener('pointerdown', (e) => { if (!wrap.contains(e.target)) open(false); });
+      wrap.addEventListener('focusout', (e) => { if (!wrap.contains(e.relatedTarget)) open(false); });
+    })();
+  </script>
 
 <main id="main">
   <style>
