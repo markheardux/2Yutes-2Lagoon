@@ -385,6 +385,12 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     .yl-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .yl-slide::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.82) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,0) 75%); pointer-events: none; }
     .yl-slide-text { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 2.5rem) clamp(2.25rem, 4vw, 2.75rem); color: #fff; }
+    .yl-slide-link { position: absolute; inset: 0; z-index: 0; }
+    .yl-slide-text { pointer-events: none; }
+    .yl-slide-text a { pointer-events: auto; }
+    .yl-slide-title a { color: inherit; text-decoration: none; }
+    .yl-slide-title a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .12em; }
+    .yl-slide-title a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 2px; }
     .yl-slide-kicker { font-size: var(--cds-font-size-caption); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 .35rem; opacity: .85; }
     .yl-slide-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(1.5rem, 4vw, 2.6rem); line-height: 1.05; margin: 0 0 .4rem; color: #fff; }
     .yl-slide-meta { font-size: var(--cds-font-size-body); margin: 0 0 .9rem; opacity: .9; }
@@ -438,7 +444,9 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
         img.onerror = () => { if (!h.image && !img.dataset.fb) { img.dataset.fb = 1; img.src = `https://i.ytimg.com/vi/${h.trailer}/hqdefault.jpg`; } };
         const t = document.createElement('div'); t.className = 'yl-slide-text';
         const k = document.createElement('p'); k.className = 'yl-slide-kicker'; k.textContent = 'Perfect 5.0';
-        const ti = document.createElement('h3'); ti.className = 'yl-slide-title'; ti.textContent = f.film;
+        const href = ylSlugs[f.film_id] ? `film/${ylSlugs[f.film_id]}/` : `film.html?id=${encodeURIComponent(f.film_id)}`;
+        const cover = document.createElement('a'); cover.className = 'yl-slide-link'; cover.href = href; cover.tabIndex = -1; cover.setAttribute('aria-hidden', 'true');
+        const ti = document.createElement('h3'); ti.className = 'yl-slide-title'; const tl = document.createElement('a'); tl.href = href; tl.textContent = f.film; ti.append(tl);
         const m = document.createElement('p'); m.className = 'yl-slide-meta';
         m.textContent = `${f.year} · ${f.director} · picked by ${f.picker}`;
         const a = document.createElement('a'); a.className = 'yl-trailer';
@@ -446,7 +454,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
         a.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>';
         a.append('Watch trailer');
         a.setAttribute('aria-label', `Watch the ${f.film} trailer on YouTube (opens in a new window)`);
-        t.append(k, ti, m, a); s.append(img, t); track.appendChild(s);
+        t.append(k, ti, m, a); s.append(img, cover, t); track.appendChild(s);
         return s;
       });
 
@@ -462,7 +470,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const go = (i) => {
         st.i = (i + films.length) % films.length;
         slides.forEach((s, j) => { s.classList.toggle('on', j === st.i); s.setAttribute('aria-hidden', j === st.i ? 'false' : 'true');
-          s.querySelector('a').tabIndex = j === st.i ? 0 : -1; });
+          s.querySelectorAll('.yl-slide-text a').forEach((x) => { x.tabIndex = j === st.i ? 0 : -1; }); });
         dotBtns.forEach((b, j) => b.setAttribute('aria-current', j === st.i ? 'true' : 'false'));
       };
       const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
