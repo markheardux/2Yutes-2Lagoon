@@ -10,6 +10,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>All films · 2Yutes, 2Lagoon</title>
+<meta name="description" content="Every film the 2Yutes, 2Lagoon film club has watched, all 163 ranked by the club’s score. Search by title, director or picker, or filter by round and genre.">
+<link rel="canonical" href="https://www.2yutes2lagoon.com/films.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="2Yutes, 2Lagoon">
+<meta property="og:title" content="All films · 2Yutes, 2Lagoon">
+<meta property="og:description" content="Every film the 2Yutes, 2Lagoon film club has watched, all 163 ranked by the club’s score. Search by title, director or picker, or filter by round and genre.">
+<meta property="og:url" content="https://www.2yutes2lagoon.com/films.html">
+<meta property="og:image" content="https://www.2yutes2lagoon.com/images/raging-bull.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<script>
+  window.ylMetaDefault = { title: document.title, desc: "Every film the 2Yutes, 2Lagoon film club has watched, all 163 ranked by the club’s score. Search by title, director or picker, or filter by round and genre.", url: "https://www.2yutes2lagoon.com/films.html" };
+  window.ylMeta = (m) => {
+    const set = (sel, attr, v) => { const e = document.querySelector(sel); if (e && v) e.setAttribute(attr, v); };
+    if (m.title) { document.title = m.title; set('meta[property="og:title"]', 'content', m.title); }
+    set('meta[name="description"]', 'content', m.desc); set('meta[property="og:description"]', 'content', m.desc);
+    set('link[rel="canonical"]', 'href', m.url); set('meta[property="og:url"]', 'content', m.url);
+    set('meta[property="og:image"]', 'content', m.image);
+  };
+</script>
 <style>
 :root{
   --font-anthropic-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -139,6 +158,13 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
 
 <div class="yl yl-page-films">
   <style>
+    .yl-sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .yl-skip { position: absolute; left: .75rem; top: -3rem; z-index: 60; background: var(--color-fg); color: var(--color-bg); padding: .5rem .9rem; border-radius: var(--cds-radius); text-decoration: none; font-family: var(--font-anthropic-sans); }
+    .yl-skip:focus { top: .75rem; }
+  </style>
+  <a class="yl-skip" href="#main">Skip to content</a>
+  <script>window.ylSlugs = {"R5-01": "body-double", "R5-02": "the-wind-that-shakes-the-barley", "R5-03": "the-cremator", "R5-04": "withnail-i", "R5-05": "metropolis", "R5-06": "a-man-escaped", "R5-07": "shall-we-dance", "R5-08": "malcolm-x", "R5-09": "roujin-z", "R5-10": "stone-cold", "R5-11": "solaris", "R5-12": "the-fisher-king", "R5-13": "army-of-shadows", "R5-14": "jin-roh-the-wolf-brigade", "R5-15": "the-ascent", "R5-16": "a-shot-in-the-dark", "R5-17": "the-double-life-of-veronique", "R5-18": "district-9", "R5-19": "perfect-blue", "R5-20": "runaway-train", "R5-21": "nomadland", "R5-22": "the-crying-game", "R4-01": "anguish", "R4-02": "midsommar", "R4-03": "moonstruck", "R4-04": "munich", "R4-05": "the-three-burials-of-melquiades-estrada", "R4-06": "dreamscape", "R4-07": "the-hidden", "R4-08": "dr-caligari", "R4-09": "playtime", "R4-10": "the-vanishing", "R4-11": "once-were-warriors", "R4-12": "m", "R4-13": "lars-and-the-real-girl", "R4-14": "tampopo", "R4-15": "hypernormalisation", "R4-16": "the-diving-bell-and-the-butterfly", "R4-17": "a-prairie-home-companion", "R4-18": "amistad", "R4-19": "colors", "R4-20": "fallen-angels", "R4-21": "nine-queens", "R4-22": "lux-aeterna", "R4-23": "hard-eight", "R4-24": "sonatine", "R4-25": "the-conversation", "R4-26": "gangs-of-wasseypur", "R4-27": "away-we-go", "R4-28": "kpop-demon-hunters", "R4-29": "the-celebration", "R4-30": "maelstrom", "R4-31": "ready-or-not", "R4-32": "beautiful-boy", "R4-33": "this-island-earth", "R4-34": "local-hero", "R4-35": "stories-we-tell", "R3-01": "winters-bone", "R3-02": "the-devil-wears-prada", "R3-03": "another-earth", "R3-04": "margarets-museum", "R3-05": "the-general", "R3-06": "kilo-two-bravo-kajaki", "R3-07": "rosemarys-baby", "R3-08": "trick-r-treat", "R3-09": "dig", "R3-10": "high-and-low", "R3-11": "the-last-emperor", "R3-12": "the-triplets-of-belleville", "R3-13": "saturday-night-fever", "R3-14": "phantom-thread", "R3-15": "monkey-man", "R3-16": "the-scent-of-green-papaya", "R3-17": "1984", "R3-18": "no-way-out", "R3-19": "devil-in-a-blue-dress", "R3-20": "rolling-thunder", "R3-21": "face-off", "R3-22": "empire-of-the-sun", "R3-23": "the-spanish-prisoner", "R3-24": "goin-down-the-road", "R3-25": "broken-flowers", "R3-26": "menace-ii-society", "R3-27": "beauty-and-the-beast", "R3-28": "locke", "R3-29": "25th-hour", "R3-30": "the-great-dictator", "R3-31": "the-african-queen", "R3-32": "a-separation", "R3-33": "under-the-skin", "R3-34": "me-and-orson-welles", "R3-35": "beau-travail", "R2-01": "marcel-the-shell-with-shoes-on", "R2-02": "the-hitcher", "R2-03": "tokyo-story", "R2-04": "city-of-god", "R2-05": "the-man-who-fell-to-earth", "R2-06": "crumb", "R2-07": "picnic-at-hanging-rock", "R2-08": "the-others", "R2-09": "lady-bird", "R2-10": "robinson-crusoe-on-mars", "R2-11": "a-cock-and-bull-story", "R2-12": "frantic", "R2-13": "sliding-doors", "R2-14": "rififi", "R2-15": "children-of-men", "R2-16": "adaptation", "R2-17": "kramer-vs-kramer", "R2-18": "the-raid", "R2-19": "surfs-up", "R2-20": "kung-fu-hustle", "R2-21": "harold-and-maude", "R2-22": "to-die-for", "R2-23": "down-by-law", "R2-24": "brick", "R2-25": "fantastic-planet", "R2-26": "the-lure", "R2-27": "sexy-beast", "R2-28": "monsoon-wedding", "R2-29": "pans-labyrinth", "R2-30": "apocalypto", "R1-01": "hot-rod", "R1-02": "frailty", "R1-03": "the-battle-of-algiers", "R1-04": "the-brood", "R1-05": "it-follows", "R1-06": "bottle-rocket", "R1-07": "tar", "R1-08": "exotica", "R1-09": "the-station-agent", "R1-10": "batman", "R1-11": "the-third-man", "R1-12": "the-proposition", "R1-13": "the-f-word", "R1-14": "in-good-company", "R1-15": "gangs-of-new-york", "R1-16": "straw-dogs", "R1-17": "the-lives-of-others", "R1-18": "chopper", "R1-19": "sanjuro", "R1-20": "the-last-jedi", "R1-21": "hot-fuzz", "R1-22": "c-r-a-z-y", "R1-23": "sneakers", "R1-24": "hard-boiled", "R1-25": "conan-the-barbarian", "R1-26": "angel-heart", "R1-27": "wizards", "R1-28": "the-killing", "R1-29": "wild", "R1-30": "ravenous", "R1-31": "superbad", "R1-32": "four-lions", "R1-33": "the-aviator", "R1-34": "atanarjuat-the-fast-runner", "R1-35": "croupier", "R1-36": "do-the-right-thing", "R1-37": "true-grit", "R1-38": "three-days-of-the-condor", "R1-39": "my-beautiful-laundrette", "R1-40": "sorcerer", "R5-23": "raging-bull"};</script>
+  <style>
     .yl-topbar { display: flex; align-items: center; gap: var(--cds-gap-sm); margin: 0 0 var(--cds-gap-md); }
     .yl-burger { all: unset; box-sizing: border-box; cursor: pointer; width: 2.75rem; height: 2.75rem; margin-left: -.6rem; border-radius: var(--cds-radius); display: grid; place-items: center; color: var(--color-fg); }
     .yl-burger:hover { background: var(--color-panel); }
@@ -238,6 +264,8 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     })();
   </script>
 
+
+<main id="main">
   <header class="yl-head" id="top">
     <p class="yl-kicker"><a class="yl-home-link" href="index.html">2Yutes, 2Lagoon</a></p>
     <h1 class="yl-title" id="yl-films-title">All films</h1>
@@ -268,7 +296,10 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     </div>
   </div>
 
+</main>
+<footer>
   <p class="yl-foot">Scores are the group averages from the sheet. The bonus Halloween round is left out, as the sheet says it doesn’t count. In Round 1 the sheet’s averages leave out Mason’s scores, so the film scores here do too, but his ratings still count in the critic stats. Cast, cinematographer and film links come from <a class="yl-link" href="https://www.themoviedb.org/">TMDB</a>; this site uses TMDB data but is not endorsed or certified by TMDB.</p>
+</footer>
 </div>
 
 <script>
@@ -621,7 +652,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       cols.forEach(([k, fmt, cls, href]) => {
         const td = document.createElement('td'); if (cls) td.className = cls;
         const text = fmt ? fmt(r[k]) : r[k];
-        if (href) { const a = document.createElement('a'); a.href = href(r); if (!/^film\.html/.test(a.getAttribute('href'))) { a.target = '_blank'; a.rel = 'noopener'; } a.className = 'yl-link'; a.textContent = text; td.appendChild(a); }
+        if (href) { const a = document.createElement('a'); a.href = href(r); if (!/^film\//.test(a.getAttribute('href'))) { a.target = '_blank'; a.rel = 'noopener'; } a.className = 'yl-link'; a.textContent = text; td.appendChild(a); }
         else td.textContent = text;
         tr.appendChild(td);
       });
@@ -665,6 +696,9 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     t.textContent = g || 'All films'; gt.hidden = !g; at.hidden = !!g;
     if (g) { gt.replaceChildren(`${n} ${n === 1 ? 'film' : 'films'} tagged ${g} on TMDB, ranked by the club’s score. `); const a = document.createElement('a'); a.href = 'films.html'; a.className = 'yl-link'; a.textContent = 'See all films'; a.onclick = (e) => { e.preventDefault(); ylSetGenre(''); }; gt.append(a); }
     document.title = (g ? `${g} films` : 'All films') + ' · 2Yutes, 2Lagoon';
+    ylMeta({ title: document.title,
+      desc: g ? `${n} ${g.toLowerCase()} ${n === 1 ? 'film' : 'films'} watched by the 2Yutes, 2Lagoon film club, ranked by the club’s score.` : ylMetaDefault.desc,
+      url: g ? `https://www.2yutes2lagoon.com/films.html?genre=${encodeURIComponent(g)}` : ylMetaDefault.url });
   };
   window.ylSetGenre = (g) => {
     ylQuery.genre = g; document.querySelectorAll('.yl-genrepick').forEach((s) => { s.value = g; });
@@ -680,7 +714,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     const rows = d.data.filter((f) => (!inGenre || inGenre.has(f.film_id)) && (!ylQuery.round || String(f.round) === ylQuery.round) &&
       (!q || `${f.film} ${f.director} ${f.picker}`.toLowerCase().includes(q)));
     const tmdb = (f) => (f.tmdb_id ? `https://www.themoviedb.org/movie/${encodeURIComponent(f.tmdb_id)}` : `https://www.themoviedb.org/search/movie?query=${encodeURIComponent(f.film)}`);
-    fill(tb, sorted(rows, 'filmtable'), [['film', null, 'film', (f) => `film.html?id=${encodeURIComponent(f.film_id)}`], ['year', null, 'num'], ['director', null, 'yl-hide-narrow'], ['picker'], ['round', null, 'num yl-hide-narrow'], ['date', (v) => d3.utcFormat('%b %-d, %Y')(new Date(v)), 'yl-hide-narrow'], ['score', yl.f2, 'num']], 'film_id');
+    fill(tb, sorted(rows, 'filmtable'), [['film', null, 'film', (f) => `film/${ylSlugs[f.film_id]}/`], ['year', null, 'num'], ['director', null, 'yl-hide-narrow'], ['picker'], ['round', null, 'num yl-hide-narrow'], ['date', (v) => d3.utcFormat('%b %-d, %Y')(new Date(v)), 'yl-hide-narrow'], ['score', yl.f2, 'num']], 'film_id');
   });
 </script>
 
