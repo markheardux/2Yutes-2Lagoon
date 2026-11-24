@@ -386,8 +386,8 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     .yl-revlist { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
     .yl-revcard { display: grid; grid-template-rows: auto 1fr; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; }
     .yl-revlist.one { grid-template-columns: minmax(0, 1fr); }
-    .yl-revlist.one .yl-revcard { grid-template-rows: none; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
-    .yl-revlist.one .yl-revimg { aspect-ratio: auto; min-height: 16rem; }
+    .yl-revlist.one .yl-revcard { grid-template-rows: none; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+    .yl-revlist.one .yl-revimg { aspect-ratio: auto; height: 100%; min-height: 18rem; }
     .yl-viewall { margin: var(--cds-gap-sm) 0 0; text-align: right; font-size: var(--cds-font-size-body); }
     .yl-viewall a { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); text-underline-offset: 3px; }
     @media (max-width: 48rem) { .yl-revlist.one .yl-revcard { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; } .yl-revlist.one .yl-revimg { aspect-ratio: 16 / 9; min-height: 0; } }
