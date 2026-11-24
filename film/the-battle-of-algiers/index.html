@@ -144,6 +144,13 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     .yl-drawer ul.yl-subnav a { font-size: var(--cds-font-size-body); padding: .4rem .8rem; margin: 0; color: var(--color-fg-muted); }
     .yl-drawer ul.yl-subnav a:hover { color: var(--color-fg); }
     .yl-drawer ul.yl-subnav a[aria-current="page"] { color: var(--color-fg); }
+    .yl-subnav-toggle { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: space-between; width: calc(100% + 1.6rem); margin: .1rem -.8rem 0; padding: .5rem .8rem;
+      border-radius: var(--cds-radius); font-size: var(--cds-font-size-body); color: var(--color-fg-muted); }
+    .yl-subnav-toggle:hover { background: var(--color-panel); color: var(--color-fg); }
+    .yl-subnav-toggle:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+    .yl-subnav-toggle svg { width: .85rem; height: .85rem; transition: transform 200ms ease; }
+    .yl-subnav-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+    .yl-drawer ul.yl-subnav[hidden] { display: none; }
     .yl-subnav-label { margin: .5rem 0 .1rem .8rem; font-size: var(--cds-font-size-caption); text-transform: uppercase; letter-spacing: .06em; color: var(--color-fg-muted); }
   </style>
 
@@ -159,11 +166,11 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       <button type="button" class="yl-drawer-close" aria-label="Close menu">×</button>
     </div>
     <ul>
-      <li><a href="/" data-page="home">Home<small>Club stats and charts</small></a></li>
+      <li><a href="/" data-page="home">Home<small>Our top films and latest reviews</small></a></li>
       <li><a href="/reviews.html" data-page="reviews">Reviews<small>Club members’ write-ups</small></a></li>
       <li><a href="/films.html" data-page="films">All Films<small>Every film we’ve watched, ranked</small></a>
-        <p class="yl-subnav-label" id="yl-genre-label">By genre</p>
-        <ul class="yl-subnav" aria-labelledby="yl-genre-label">
+        <button type="button" class="yl-subnav-toggle" aria-expanded="false" aria-controls="yl-genre-list">By genre<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+        <ul class="yl-subnav" id="yl-genre-list" hidden="">
           <li><a href="/films.html?genre=Action" data-genre="Action">Action</a></li>
           <li><a href="/films.html?genre=Adventure" data-genre="Adventure">Adventure</a></li>
           <li><a href="/films.html?genre=Animation" data-genre="Animation">Animation</a></li>
@@ -184,6 +191,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
           <li><a href="/films.html?genre=Western" data-genre="Western">Western</a></li>
         </ul>
       </li>
+      <li><a href="/stats.html" data-page="stats">Statistics<small>Critics, eras, genres and repeat names</small></a></li>
     </ul>
   </div>
 
@@ -198,6 +206,10 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
         if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
       });
       ylNavMark(genre);
+      const tog = drawer.querySelector('.yl-subnav-toggle'), gl = document.getElementById('yl-genre-list');
+      const openGenres = (on) => { tog.setAttribute('aria-expanded', String(on)); gl.hidden = !on; };
+      tog.addEventListener('click', () => openGenres(tog.getAttribute('aria-expanded') !== 'true'));
+      if (genre) openGenres(true);
       const set = (open) => {
         document.body.classList.toggle('yl-nav-open', open);
         burger.setAttribute('aria-expanded', String(open));
