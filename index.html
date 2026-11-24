@@ -205,6 +205,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     </div>
     <ul>
       <li><a href="./" data-page="home">Home<small>Club stats and charts</small></a></li>
+      <li><a href="reviews.html" data-page="reviews">Reviews<small>Club members’ write-ups</small></a></li>
       <li><a href="films.html" data-page="films">All Films<small>Every film we’ve watched, ranked</small></a>
         <p class="yl-subnav-label" id="yl-genre-label">By genre</p>
         <ul class="yl-subnav" aria-labelledby="yl-genre-label">
@@ -491,33 +492,42 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
   <style>
     .yl-revlist { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
     .yl-revcard { display: grid; grid-template-rows: auto 1fr; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; }
+    .yl-revlist.one { grid-template-columns: minmax(0, 1fr); }
     .yl-revlist.one .yl-revcard { grid-template-rows: none; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
-    @media (max-width: 48rem) { .yl-revlist.one .yl-revcard { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; } }
+    .yl-revlist.one .yl-revimg { aspect-ratio: auto; min-height: 16rem; }
+    .yl-viewall { margin: var(--cds-gap-sm) 0 0; text-align: right; font-size: var(--cds-font-size-body); }
+    .yl-viewall a { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); text-underline-offset: 3px; }
+    @media (max-width: 48rem) { .yl-revlist.one .yl-revcard { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; } .yl-revlist.one .yl-revimg { aspect-ratio: 16 / 9; min-height: 0; } }
     .yl-revimg { display: block; background: #1b1b1b; aspect-ratio: 16 / 9; min-height: 100%; }
     .yl-revimg img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .yl-revtext { padding: clamp(1.25rem, 3vw, 2rem); display: flex; flex-direction: column; justify-content: center; }
     .yl-revfilm { font-size: var(--cds-font-size-caption); letter-spacing: .08em; text-transform: uppercase; color: var(--color-fg-muted); margin: 0 0 .5rem; }
-    .yl-revtext h3 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.15; margin: 0 0 .5rem; }
-    .yl-revtext h3 a { color: var(--color-fg); text-decoration: none; }
-    .yl-revtext h3 a:hover { text-decoration: underline; text-underline-offset: .12em; text-decoration-thickness: 1px; }
+    .yl-revtext h2, .yl-revtext h3 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.15; margin: 0 0 .5rem; }
+    .yl-revtext h2 a, .yl-revtext h3 a { color: var(--color-fg); text-decoration: none; }
+    .yl-revtext h2 a:hover, .yl-revtext h3 a:hover { text-decoration: underline; text-underline-offset: .12em; text-decoration-thickness: 1px; }
     .yl-revby { font-size: var(--cds-font-size-body); color: var(--color-fg-muted); margin: 0 0 1rem; }
     .yl-revfirst { font-family: var(--font-anthropic-serif); font-size: 1.1rem; line-height: 1.6; margin: 0 0 1.1rem; color: var(--color-fg); }
     .yl-revmore { align-self: flex-start; display: inline-flex; gap: .4rem; padding: .5rem .95rem; border-radius: 999px; background: var(--color-fg); color: var(--color-bg); text-decoration: none; font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); }
     .yl-revmore:hover { opacity: .85; }
+    .yl-sechead { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+    .yl-seclink { font-size: var(--cds-font-size-body); color: var(--color-fg-muted); text-underline-offset: 2px; white-space: nowrap; }
+    .yl-seclink:hover { color: var(--color-fg); }
+    .yl-revempty { color: var(--color-fg-muted); }
   </style>
   <h2 class="yl-section" id="reviews">Reviews</h2>
   <div class="yl-revlist one">
     <article class="yl-revcard">
-      <a class="yl-revimg" href="film/raging-bull/#review" tabindex="-1" aria-hidden="true"><img src="images/raging-bull-review.jpg" alt="" loading="lazy" decoding="async" style="object-position:65% 35%"></a>
+      <a class="yl-revimg" href="film/la-strada/#review" tabindex="-1" aria-hidden="true"><img src="images/la-strada.jpg" alt="" loading="lazy" decoding="async" style="object-position:center 25%"></a>
       <div class="yl-revtext">
-        <p class="yl-revfilm">Raging Bull (1980)</p>
-        <h3><a href="film/raging-bull/#review">Black and White, So That it Wasn’t Red All Over</a></h3>
+        <p class="yl-revfilm">La Strada (1954)</p>
+        <h3><a href="film/la-strada/#review">Pebbles and Boulders with Purposes</a></h3>
         <p class="yl-revby">By Mark · <time datetime="2026-11-23">November 23, 2026</time></p>
-        <p class="yl-revfirst">Raging Bull’s opening is gorgeous. Robert De Niro, as fighter Jake La Motta, shadowboxes in a ring, robed in black and white. As well as an actual robe.</p>
-        <a class="yl-revmore" href="film/raging-bull/#review" aria-label="Read Mark’s review of Raging Bull">Read review <span aria-hidden="true">→</span></a>
+        <p class="yl-revfirst">It’s wild that La strada followed Raging Bull in the schedule. Anthony Quinn’s strongman Zampanó is Jake La Motta at the circus, taking out his insecurities on Gelsomina, a wide-eyed peasant girl he purchases from a poor widow for 10,000 lire. Gelsomina, played by director Federico Fellini’s theatre-trained wife Giulietta Masina, faces numerous hardships in her forced servitude to the drunken brute, but maintains her curiosity about the world.</p>
+        <a class="yl-revmore" href="film/la-strada/#review" aria-label="Read Mark’s review of La Strada">Read review <span aria-hidden="true">→</span></a>
       </div>
     </article>
   </div>
+  <p class="yl-viewall"><a href="reviews.html">View all 2 reviews <span aria-hidden="true">→</span></a></p>
 
   <span id="best" hidden></span>
   <h2 class="yl-section" id="people">The people</h2>
