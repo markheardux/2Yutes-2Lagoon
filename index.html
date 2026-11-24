@@ -136,6 +136,9 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
   .yl td { padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
   .yl td.num, .yl th.num { text-align: right; }
   .yl td.film { font-weight: var(--cds-font-weight-medium); }
+  .yl a.yl-svglink { cursor: pointer; }
+  .yl a.yl-svglink:hover text:first-of-type, .yl a.yl-svglink:focus-visible text:first-of-type { text-decoration: underline; }
+  .yl a.yl-svglink:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
   .yl a.yl-link { color: inherit; text-decoration: underline; text-decoration-color: var(--color-border-line); text-underline-offset: 2px; }
   .yl a.yl-link:hover { text-decoration-color: currentColor; }
   .yl .yl-bar { display: inline-block; height: .5rem; border-radius: 2px; background: var(--yl-accent); vertical-align: middle; margin-right: .4rem; }
@@ -485,20 +488,38 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     });
   </script>
 
-  <h2 class="yl-section" id="best-worst">The best and the worst</h2>
-  <div class="yl-grid">
-    <div class="yl-card">
-      <h3>Hall of fame</h3>
-      <p class="yl-note">The ten highest group averages of all time.</p>
-      <div class="yl-chart dash-skeleton" id="chart-top" data-draw="topten" data-source="films"></div>
-    </div>
-    <div class="yl-card">
-      <h3>Hall of shame</h3>
-      <p class="yl-note">The ten lowest group averages of all time.</p>
-      <div class="yl-chart dash-skeleton" id="chart-bottom" data-draw="bottomten" data-source="films"></div>
-    </div>
+  <style>
+    .yl-revlist { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+    .yl-revcard { display: grid; grid-template-rows: auto 1fr; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; }
+    .yl-revlist.one .yl-revcard { grid-template-rows: none; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+    @media (max-width: 48rem) { .yl-revlist.one .yl-revcard { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; } }
+    .yl-revimg { display: block; background: #1b1b1b; aspect-ratio: 16 / 9; min-height: 100%; }
+    .yl-revimg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .yl-revtext { padding: clamp(1.25rem, 3vw, 2rem); display: flex; flex-direction: column; justify-content: center; }
+    .yl-revfilm { font-size: var(--cds-font-size-caption); letter-spacing: .08em; text-transform: uppercase; color: var(--color-fg-muted); margin: 0 0 .5rem; }
+    .yl-revtext h3 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.15; margin: 0 0 .5rem; }
+    .yl-revtext h3 a { color: var(--color-fg); text-decoration: none; }
+    .yl-revtext h3 a:hover { text-decoration: underline; text-underline-offset: .12em; text-decoration-thickness: 1px; }
+    .yl-revby { font-size: var(--cds-font-size-body); color: var(--color-fg-muted); margin: 0 0 1rem; }
+    .yl-revfirst { font-family: var(--font-anthropic-serif); font-size: 1.1rem; line-height: 1.6; margin: 0 0 1.1rem; color: var(--color-fg); }
+    .yl-revmore { align-self: flex-start; display: inline-flex; gap: .4rem; padding: .5rem .95rem; border-radius: 999px; background: var(--color-fg); color: var(--color-bg); text-decoration: none; font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); }
+    .yl-revmore:hover { opacity: .85; }
+  </style>
+  <h2 class="yl-section" id="reviews">Reviews</h2>
+  <div class="yl-revlist one">
+    <article class="yl-revcard">
+      <a class="yl-revimg" href="film/raging-bull/#review" tabindex="-1" aria-hidden="true"><img src="images/raging-bull.jpg" alt="" loading="lazy" decoding="async" style="object-position:center 30%"></a>
+      <div class="yl-revtext">
+        <p class="yl-revfilm">Raging Bull (1980)</p>
+        <h3><a href="film/raging-bull/#review">Black and White, So That it Wasn’t Red All Over</a></h3>
+        <p class="yl-revby">By Mark · <time datetime="2026-11-23">November 23, 2026</time></p>
+        <p class="yl-revfirst">Raging Bull’s opening is gorgeous. Robert De Niro, as fighter Jake La Motta, shadowboxes in a ring, robed in black and white. As well as an actual robe.</p>
+        <a class="yl-revmore" href="film/raging-bull/#review" aria-label="Read Mark’s review of Raging Bull">Read review <span aria-hidden="true">→</span></a>
+      </div>
+    </article>
   </div>
 
+  <span id="best" hidden></span>
   <h2 class="yl-section" id="people">The people</h2>
   <div class="yl-card">
     <h3>Critic report cards</h3>
@@ -664,6 +685,13 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const h = t.node().getBBox().height; t.remove(); return h || 14;
     },
     // Horizontal bars: rows of {label, value, note, sub}
+    linkRows(sel, href, label) { // wrap each SVG row group in a link
+      sel.each(function (d) {
+        const a = document.createElementNS('http://www.w3.org/2000/svg', 'a');
+        a.setAttribute('href', href(d)); a.setAttribute('class', 'yl-svglink'); a.setAttribute('aria-label', label(d));
+        this.parentNode.insertBefore(a, this); a.appendChild(this);
+      });
+    },
     hbar(el, rows, opt = {}) {
       const W = Math.max(260, el.clientWidth), rowH = 26;
       const H = rows.length * rowH + 24;
@@ -690,6 +718,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       g.append('text').attr('class', 'muted').attr('x', (d) => x(d.value) + 6).attr('y', rowH / 2).attr('dy', '.35em').text((d) => d.note);
       g.append('rect').attr('x', 0).attr('width', W).attr('height', rowH).attr('fill', 'transparent')
         .on('mousemove', (ev, d) => tip.show(ev, d.label, d.sub)).on('mouseleave', tip.hide);
+      if (opt.href) yl.linkRows(g, opt.href, (d) => d.label);
       if (opt.ref != null) {
         svg.append('line').attr('x1', x(opt.ref)).attr('x2', x(opt.ref)).attr('y1', 0).attr('y2', H - 20)
           .attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 3');
@@ -755,7 +784,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     description: 'Directors with more than one film watched, with their average score.',
     inputs: ['films'],
     fn: (films) => d3.rollups(films, (v) => ({
-      films: v.length, avg_score: Math.round(d3.mean(v, (f) => +f.score) * 100) / 100, titles: v.map((f) => f.film).join(', ')
+      films: v.length, avg_score: Math.round(d3.mean(v, (f) => +f.score) * 100) / 100, titles: v.map((f) => f.film).join(', '), fids: v.map((f) => f.film_id)
     }), (f) => f.director).map(([director, s]) => ({ director, ...s }))
       .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score)
   });
@@ -767,7 +796,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const byId = new Map(films.map((f) => [f.film_id, f]));
       return d3.rollups(dps.filter((c) => byId.has(c.film_id)), (v) => {
         const fs = [...new Map(v.map((c) => [c.film_id, byId.get(c.film_id)])).values()];
-        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', ') };
+        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', '), fids: fs.map((f) => f.film_id) };
       }, (c) => c.cinematographer).map(([cinematographer, s]) => ({ cinematographer, ...s }))
         .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score);
     }
@@ -780,7 +809,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const byId = new Map(films.map((f) => [f.film_id, f]));
       return d3.rollups(cast.filter((c) => byId.has(c.film_id)), (v) => {
         const fs = [...new Map(v.map((c) => [c.film_id, byId.get(c.film_id)])).values()];
-        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', ') };
+        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', '), fids: fs.map((f) => f.film_id) };
       }, (c) => c.actor).map(([actor, s]) => ({ actor, ...s }))
         .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score);
     }
@@ -808,7 +837,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const byId = new Map(films.map((f) => [f.film_id, f]));
       return d3.rollups(cs.filter((c) => byId.has(c.film_id)), (v) => {
         const fs = [...new Map(v.map((c) => [c.film_id, byId.get(c.film_id)])).values()];
-        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', ') };
+        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', '), fids: fs.map((f) => f.film_id) };
       }, (c) => c.composer).map(([composer, s]) => ({ composer, ...s }))
         .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score);
     }
@@ -825,18 +854,19 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     el.textContent = el.dataset.field === 'avg_score' ? yl.f2(v) : el.dataset.field.endsWith('year') ? String(v) : d3.format(',')(v);
   });
 
+  window.ylFilmUrl = (id) => (window.ylSlugs && ylSlugs[id] ? `film/${ylSlugs[id]}/` : `film.html?id=${encodeURIComponent(id)}`);
   const filmRows = () => dash.data('films').data.map((f) => ({ ...f, score: +f.score, year: +f.year, spread: +f.spread, low: +f.low, high: +f.high, ratings: +f.ratings }));
   const filmSub = (f) => `${yl.f2(f.score)} · ${f.year} · ${f.director} · picked by ${f.picker}`;
 
   dash.draw('topten', (el) => {
     if (!yl.ok(el, 'films')) return; el.replaceChildren();
     const rows = filmRows().sort((a, b) => b.score - a.score || a.film.localeCompare(b.film)).slice(0, 10);
-    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f) })));
+    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f), id: f.film_id })), { href: (d) => ylFilmUrl(d.id) });
   });
   dash.draw('bottomten', (el) => {
     if (!yl.ok(el, 'films')) return; el.replaceChildren();
     const rows = filmRows().sort((a, b) => a.score - b.score || a.film.localeCompare(b.film)).slice(0, 10);
-    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f) })), { color: () => dash.colors[3] });
+    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f), id: f.film_id })), { color: () => dash.colors[3], href: (d) => ylFilmUrl(d.id) });
   });
 
   dash.draw('rounds', (el) => {
@@ -902,7 +932,8 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       .attr('cx', (f) => x(f.year)).attr('cy', (f) => y(f.score)).attr('r', 5)
       .attr('fill', dash.colors[0]).attr('fill-opacity', 0.75).attr('stroke', 'var(--color-panel)')
       .on('mousemove', function (ev, f) { d3.select(this).attr('r', 7).attr('fill-opacity', 1); tip.show(ev, `${f.film} (${f.year})`, `${yl.f2(f.score)} · Round ${f.round} · picked by ${f.picker}`); })
-      .on('mouseleave', function () { d3.select(this).attr('r', 5).attr('fill-opacity', 0.75); tip.hide(); });
+      .on('mouseleave', function () { d3.select(this).attr('r', 5).attr('fill-opacity', 0.75); tip.hide(); })
+      .style('cursor', 'pointer').on('click', (ev, f) => { location.href = ylFilmUrl(f.film_id); });
     el.appendChild(el.querySelector('.yl-tip'));
   });
 
@@ -934,6 +965,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     g.append('circle').attr('cx', (d) => x(d.high)).attr('r', 5).attr('fill', dash.colors[0]);
     g.append('rect').attr('x', 0).attr('y', -rowH / 2).attr('width', W).attr('height', rowH).attr('fill', 'transparent')
       .on('mousemove', (ev, d) => tip.show(ev, d.film, `Low ${d.low} · high ${d.high} · group ${yl.f2(d.score)}`)).on('mouseleave', tip.hide);
+    yl.linkRows(g, (d) => ylFilmUrl(d.film_id), (d) => d.film);
     el.appendChild(el.querySelector('.yl-tip'));
   });
 </script>
@@ -972,6 +1004,9 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
         const td = document.createElement('td'); if (cls) td.className = cls;
         const text = fmt ? fmt(r[k]) : r[k];
         if (href) { const a = document.createElement('a'); a.href = href(r); a.target = '_blank'; a.rel = 'noopener'; a.className = 'yl-link'; a.textContent = text; td.appendChild(a); }
+        else if (k === 'titles' && Array.isArray(r.fids)) {
+          r.fids.forEach((id, i) => { if (i) td.append(', '); const a = document.createElement('a'); a.href = ylFilmUrl(id); a.className = 'yl-link'; a.textContent = (dash.data('films').data.find((f) => f.film_id === id) || { film: id }).film; td.append(a); });
+        }
         else td.textContent = text;
         tr.appendChild(td);
       });

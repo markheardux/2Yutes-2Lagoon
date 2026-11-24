@@ -91,6 +91,9 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
   .yl td { padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
   .yl td.num, .yl th.num { text-align: right; }
   .yl td.film { font-weight: var(--cds-font-weight-medium); }
+  .yl a.yl-svglink { cursor: pointer; }
+  .yl a.yl-svglink:hover text:first-of-type, .yl a.yl-svglink:focus-visible text:first-of-type { text-decoration: underline; }
+  .yl a.yl-svglink:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
   .yl a.yl-link { color: inherit; text-decoration: underline; text-decoration-color: var(--color-border-line); text-underline-offset: 2px; }
   .yl a.yl-link:hover { text-decoration-color: currentColor; }
   .yl .yl-bar { display: inline-block; height: .5rem; border-radius: 2px; background: var(--yl-accent); vertical-align: middle; margin-right: .4rem; }
@@ -315,6 +318,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
   </script>
 
 <main id="main">
+
   <style>
     .yl-back { display: inline-block; margin: 0 0 var(--cds-gap-md); color: var(--color-fg-muted); text-decoration: none; font-size: var(--cds-font-size-body); }
     .yl-back:hover { color: var(--color-fg); }
@@ -350,11 +354,43 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     .yl-also a:hover { color: var(--color-fg); }
     .yl-crew { margin-top: 0; }
     .yl-facts dd .nm + .nm { margin-top: .35rem; }
+    /* Quick facts sit right under the still, in black, so they read as part of the banner. */
+    .yl-fbanner { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+    .yl .yl-facts-top { margin-top: 0; gap: 1px; background: #fff; border-top: 1px solid #fff; border-radius: 0 0 var(--cds-radius) var(--cds-radius); overflow: hidden;
+      grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    @media (max-width: 60rem) { .yl .yl-facts-top { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 34rem) { .yl .yl-facts-top { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .yl .yl-facts-top div { background: #161616; border: 0; border-radius: 0; color: #fff; }
+    .yl .yl-facts-top dt { color: rgba(255,255,255,.62); }
+    .yl .yl-facts-top dd { color: #fff; }
+    .yl .yl-facts-top div { position: relative; transition: background-color .15s; }
+    .yl .yl-facts-top dd a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,.35); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .yl .yl-facts-top dd a:hover { text-decoration-color: #fff; }
+    .yl .yl-facts-top dd a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 2px; }
+    .yl .yl-facts-top div.one a::after { content: ""; position: absolute; inset: 0; }
+    .yl .yl-facts-top div.one:hover { background: #262626; }
+    /* Review in the main column, cast, crew and links in a right-hand rail. */
+    .yl-fbody.has-review { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 21rem); gap: clamp(2rem, 5vw, 4rem); align-items: start; margin-top: var(--cds-gap-lg); }
+    @media (max-width: 56rem) { .yl-fbody.has-review { grid-template-columns: minmax(0, 1fr); } }
+    .yl-review { max-width: 40rem; }
+    .yl-review-kicker { font-size: var(--cds-font-size-caption); letter-spacing: .08em; text-transform: uppercase; color: var(--color-fg-muted); margin: 0 0 .4rem; }
+    .yl-review h2 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(1.6rem, 3.4vw, 2.25rem); line-height: 1.15; margin: 0 0 .6rem; }
+    .yl-review-by { font-size: var(--cds-font-size-body); color: var(--color-fg-muted); margin: 0 0 1.5rem; }
+    .yl-review-by strong { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+    .yl-review-body p { font-family: var(--font-anthropic-serif); font-size: 1.15rem; line-height: 1.7; margin: 0 0 1.1em; color: var(--color-fg); }
+    .yl-review-body p:first-child::first-letter { float: left; font-size: 3.4em; line-height: .85; padding: .08em .08em 0 0; }
+    .yl-review-body strong { font-weight: 600; }
+    .yl-rail > :first-child { margin-top: 0; }
+    .yl-rail .yl-people h2, .yl-rail .yl-related h2 { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); text-transform: uppercase; letter-spacing: .06em; color: var(--color-fg-muted); }
+    .yl-rail .yl-cast { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    @media (max-width: 56rem) { .yl-rail .yl-cast { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--cds-gap-md); } }
+    .yl-rail .yl-crew { grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; }
+    .yl-rail .yl-crew div { background: none; border: 0; border-bottom: 1px solid var(--color-border-line); border-radius: 0; padding: var(--cds-pad-sm) 0; }
     .yl-missing { padding: var(--cds-pad-lg) 0; }
   </style>
 
   <a class="yl-back" href="/films.html">← All films</a>
-  <article class="yl-film" data-draw="filmdetail" data-source="films" aria-live="polite"><div class="yl-fbanner"><img alt="Still from The Spanish Prisoner (1997): Two men in dark suits, one in glasses, the other with white hair, stand side by side." decoding="async" src="/images/the-spanish-prisoner.jpg" style="object-position: center 30%;"><div class="yl-fbanner-text"><h1>The Spanish Prisoner</h1><a class="yl-trailer" href="https://www.youtube.com/watch?v=uROURS6Qd9k" target="_blank" rel="noopener" aria-label="Watch the The Spanish Prisoner trailer on YouTube (opens in a new window)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"></path></svg>Watch trailer</a></div></div><h2 class="yl-sr">Film details</h2><dl class="yl-facts"><div><dt>Year</dt><dd>1997</dd></div><div><dt>Director</dt><dd>David Mamet</dd></div><div><dt>Picked by</dt><dd>Colin</dd></div><div><dt>Round</dt><dd>3</dd></div><div><dt>Score</dt><dd class="big">4.06</dd></div><div><dt>Genre</dt><dd>Drama, Mystery, Thriller</dd></div></dl><section class="yl-people" aria-labelledby="yl-cast-h"><h2 id="yl-cast-h">Top cast</h2><ul class="yl-cast"><li><span class="nm">Steve Martin</span></li><li><span class="nm">Campbell Scott</span></li><li><span class="nm">Ben Gazzara</span></li><li><span class="nm">Rebecca Pidgeon</span></li><li><span class="nm">Ricky Jay</span></li><li><span class="nm">Felicity Huffman</span></li><li><span class="nm">David Pittu</span></li><li><span class="nm">J.J. Johnston</span></li></ul></section><section class="yl-people" aria-labelledby="yl-crew-h"><h2 id="yl-crew-h">Crew</h2><dl class="yl-facts yl-crew"><div><dt>Cinematographer</dt><dd><span class="nm">Gabriel Beristain</span></dd></div><div><dt>Composer</dt><dd><span class="nm">Carter Burwell</span><span class="yl-also">Also in <a href="/film/adaptation/">Adaptation</a> and <a href="/film/true-grit/">True Grit</a></span></dd></div></dl></section><section class="yl-related" aria-label="Related links"><h2>Related links</h2><ul><li><a href="https://www.rogerebert.com/reviews/the-spanish-prisoner-1998" target="_blank" rel="noopener">Roger Ebert review</a></li><li><a href="https://www.themoviedb.org/movie/29193" target="_blank" rel="noopener">TMDB page</a></li><li><a href="https://www.rottentomatoes.com/m/spanish_prisoner" target="_blank" rel="noopener">Rotten Tomatoes</a></li></ul></section></article>
+  <article class="yl-film" data-draw="filmdetail" data-source="films" aria-live="polite"><div class="yl-fbanner"><img alt="Still from The Spanish Prisoner (1997): Two men in dark suits, one in glasses, the other with white hair, stand side by side." decoding="async" src="/images/the-spanish-prisoner.jpg" style="object-position: center 30%;"><div class="yl-fbanner-text"><h1>The Spanish Prisoner</h1><a class="yl-trailer" href="https://www.youtube.com/watch?v=uROURS6Qd9k" target="_blank" rel="noopener" aria-label="Watch the The Spanish Prisoner trailer on YouTube (opens in a new window)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"></path></svg>Watch trailer</a></div></div><h2 class="yl-sr">Film details</h2><dl class="yl-facts yl-facts-top"><div class="one"><dt>Year</dt><dd><a href="/films.html?year=1997" title="All films from 1997">1997</a></dd></div><div class="one"><dt>Director</dt><dd><a href="/films.html?director=David%20Mamet" title="All films directed by David Mamet">David Mamet</a></dd></div><div class="one"><dt>Picked by</dt><dd><a href="/films.html?picker=Colin" title="All films picked by Colin">Colin</a></dd></div><div class="one"><dt>Round</dt><dd><a href="/films.html?round=3" title="All films from Round 3">3</a></dd></div><div><dt>Score</dt><dd class="big">4.06</dd></div><div><dt>Genre</dt><dd><a href="/films.html?genre=Drama" title="All drama films">Drama</a>, <a href="/films.html?genre=Mystery" title="All mystery films">Mystery</a>, <a href="/films.html?genre=Thriller" title="All thriller films">Thriller</a></dd></div></dl><section class="yl-people" aria-labelledby="yl-cast-h"><h2 id="yl-cast-h">Top cast</h2><ul class="yl-cast"><li><span class="nm">Steve Martin</span></li><li><span class="nm">Campbell Scott</span></li><li><span class="nm">Ben Gazzara</span></li><li><span class="nm">Rebecca Pidgeon</span></li><li><span class="nm">Ricky Jay</span></li><li><span class="nm">Felicity Huffman</span></li><li><span class="nm">David Pittu</span></li><li><span class="nm">J.J. Johnston</span></li></ul></section><section class="yl-people" aria-labelledby="yl-crew-h"><h2 id="yl-crew-h">Crew</h2><dl class="yl-facts yl-crew"><div><dt>Cinematographer</dt><dd><span class="nm">Gabriel Beristain</span></dd></div><div><dt>Composer</dt><dd><span class="nm">Carter Burwell</span><span class="yl-also">Also in <a href="/film/adaptation/">Adaptation</a> and <a href="/film/true-grit/">True Grit</a></span></dd></div></dl></section><section class="yl-related" aria-label="Related links"><h2>Related links</h2><ul><li><a href="https://www.rogerebert.com/reviews/the-spanish-prisoner-1998" target="_blank" rel="noopener">Roger Ebert review</a></li><li><a href="https://www.themoviedb.org/movie/29193" target="_blank" rel="noopener">TMDB page</a></li><li><a href="https://www.rottentomatoes.com/m/spanish_prisoner" target="_blank" rel="noopener">Rotten Tomatoes</a></li></ul></section></article>
 
   
 

@@ -136,6 +136,9 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
   .yl td { padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
   .yl td.num, .yl th.num { text-align: right; }
   .yl td.film { font-weight: var(--cds-font-weight-medium); }
+  .yl a.yl-svglink { cursor: pointer; }
+  .yl a.yl-svglink:hover text:first-of-type, .yl a.yl-svglink:focus-visible text:first-of-type { text-decoration: underline; }
+  .yl a.yl-svglink:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
   .yl a.yl-link { color: inherit; text-decoration: underline; text-decoration-color: var(--color-border-line); text-underline-offset: 2px; }
   .yl a.yl-link:hover { text-decoration-color: currentColor; }
   .yl .yl-bar { display: inline-block; height: .5rem; border-radius: 2px; background: var(--yl-accent); vertical-align: middle; margin-right: .4rem; }
@@ -360,6 +363,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
   </script>
 
 <main id="main">
+<script>window.ylReviews = {"R5-23": {"title": "Black and White, So That it Wasn’t Red All Over", "author": "Mark", "date": "November 23, 2026", "iso": "2026-11-23", "words": 315, "html": "<p><strong>Raging Bull’s<\/strong> opening is gorgeous. Robert De Niro, as fighter Jake La Motta, shadowboxes in a ring, robed in black and white. As well as an actual robe.<\/p><p>Martin Scorsese did so to avoid the censors coming at him like they did for <strong>Taxi Driver’s<\/strong> bloody finale. For that film, one of our generation’s greatest directors turned up the saturation, creating a sort of dream-like quality to Travis Bickle’s bloody rampage. It worked, kinda, but also made everything look brown. It did get the rating down to Restricted from X. This time, he avoids any such last minute fiddling, by starting out in black and white. It lends a timeless quality to the proceedings.<\/p><p>The last time I watched Raging Bull was 20, maybe 25 years ago. I admired it, but did I enjoy it? Tough to say, and maybe the answer is in how much time had elapsed between viewings. As a man in my 20s, I found La Motta’s rage, misogyny and paranoia relentless and unsettling; the scenes of domestic violence stomach churning.<\/p><p>That hasn’t changed, but other things caught my attention this time around. First, the boxing itself, so beautifully captured by someone who doesn’t follow the sport, or maybe any sport at all. Tracking shots, changes in perspective, as two warriors dance.<\/p><p>Much has been said about De Niro’s performance, and I’m not sure I can add much more, other than to concur that it’s magnificent. This time, I paid more attention to Joe Pesci as his brother Joey La Motta and Cathy Moriarty as his second wife Vicky. This is somehow Pesci’s most sympathetic role in a Scorsese movie, put to task as his brother’s handler and sometimes punching bag. Moriarty achieves greatness here, playing both a victim and a steely-eyed pragmatist.<\/p><p>I was happy to revisit Raging Bull. It’s a masterpiece, deserving of all the accolades it didn’t receive.<\/p>", "excerpt": "Raging Bull’s opening is gorgeous. Robert De Niro, as fighter Jake La Motta, shadowboxes in a ring, robed in black and white. As well as an actual robe.", "first": "Raging Bull’s opening is gorgeous. Robert De Niro, as fighter Jake La Motta, shadowboxes in a ring, robed in black and white. As well as an actual robe."}};</script>
   <style>
     .yl-back { display: inline-block; margin: 0 0 var(--cds-gap-md); color: var(--color-fg-muted); text-decoration: none; font-size: var(--cds-font-size-body); }
     .yl-back:hover { color: var(--color-fg); }
@@ -395,6 +399,38 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     .yl-also a:hover { color: var(--color-fg); }
     .yl-crew { margin-top: 0; }
     .yl-facts dd .nm + .nm { margin-top: .35rem; }
+    /* Quick facts sit right under the still, in black, so they read as part of the banner. */
+    .yl-fbanner { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+    .yl .yl-facts-top { margin-top: 0; gap: 1px; background: #fff; border-top: 1px solid #fff; border-radius: 0 0 var(--cds-radius) var(--cds-radius); overflow: hidden;
+      grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    @media (max-width: 60rem) { .yl .yl-facts-top { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 34rem) { .yl .yl-facts-top { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .yl .yl-facts-top div { background: #161616; border: 0; border-radius: 0; color: #fff; }
+    .yl .yl-facts-top dt { color: rgba(255,255,255,.62); }
+    .yl .yl-facts-top dd { color: #fff; }
+    .yl .yl-facts-top div { position: relative; transition: background-color .15s; }
+    .yl .yl-facts-top dd a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,.35); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .yl .yl-facts-top dd a:hover { text-decoration-color: #fff; }
+    .yl .yl-facts-top dd a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 2px; }
+    .yl .yl-facts-top div.one a::after { content: ""; position: absolute; inset: 0; }
+    .yl .yl-facts-top div.one:hover { background: #262626; }
+    /* Review in the main column, cast, crew and links in a right-hand rail. */
+    .yl-fbody.has-review { display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 21rem); gap: clamp(2rem, 5vw, 4rem); align-items: start; margin-top: var(--cds-gap-lg); }
+    @media (max-width: 56rem) { .yl-fbody.has-review { grid-template-columns: minmax(0, 1fr); } }
+    .yl-review { max-width: 40rem; }
+    .yl-review-kicker { font-size: var(--cds-font-size-caption); letter-spacing: .08em; text-transform: uppercase; color: var(--color-fg-muted); margin: 0 0 .4rem; }
+    .yl-review h2 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(1.6rem, 3.4vw, 2.25rem); line-height: 1.15; margin: 0 0 .6rem; }
+    .yl-review-by { font-size: var(--cds-font-size-body); color: var(--color-fg-muted); margin: 0 0 1.5rem; }
+    .yl-review-by strong { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+    .yl-review-body p { font-family: var(--font-anthropic-serif); font-size: 1.15rem; line-height: 1.7; margin: 0 0 1.1em; color: var(--color-fg); }
+    .yl-review-body p:first-child::first-letter { float: left; font-size: 3.4em; line-height: .85; padding: .08em .08em 0 0; }
+    .yl-review-body strong { font-weight: 600; }
+    .yl-rail > :first-child { margin-top: 0; }
+    .yl-rail .yl-people h2, .yl-rail .yl-related h2 { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); text-transform: uppercase; letter-spacing: .06em; color: var(--color-fg-muted); }
+    .yl-rail .yl-cast { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    @media (max-width: 56rem) { .yl-rail .yl-cast { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--cds-gap-md); } }
+    .yl-rail .yl-crew { grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; }
+    .yl-rail .yl-crew div { background: none; border: 0; border-bottom: 1px solid var(--color-border-line); border-radius: 0; padding: var(--cds-pad-sm) 0; }
     .yl-missing { padding: var(--cds-pad-lg) 0; }
   </style>
 
@@ -445,10 +481,20 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       // Facts.
       const genres = dash.data('genres').data.filter((g) => g.film_id === f.film_id).map((g) => g.genre);
       const dh = mk('h2', 'yl-sr', 'Film details');
-      const dl = mk('dl', 'yl-facts');
-      [['Year', f.year], ['Director', f.director], ['Picked by', f.picker], ['Round', f.round],
-       ['Score', yl.f2(+f.score), 'big'], ['Genre', genres.join(', ') || '—']].forEach(([k, v, c]) => {
-        const d = mk('div'); d.append(mk('dt', null, k), mk('dd', c || null, v)); dl.append(d);
+      const dl = mk('dl', 'yl-facts yl-facts-top');
+      // Each fact links to the All films list filtered to match (same year, director, picker, round or genre).
+      const fl = (k, v) => `films.html?${k}=${encodeURIComponent(v)}`;
+      const linkTo = (txt, href, title) => { const a = mk('a', null, String(txt)); a.href = href; a.title = title; return a; };
+      [['Year', [[f.year, fl('year', f.year), `All films from ${f.year}`]]],
+       ['Director', [[f.director, fl('director', f.director), `All films directed by ${f.director}`]]],
+       ['Picked by', [[f.picker, fl('picker', f.picker), `All films picked by ${f.picker}`]]],
+       ['Round', [[f.round, fl('round', f.round), `All films from Round ${f.round}`]]],
+       ['Score', yl.f2(+f.score), 'big'],
+       ['Genre', genres.length ? genres.map((g) => [g, fl('genre', g), `All ${g.toLowerCase()} films`]) : '—']].forEach(([k, v, c]) => {
+        const d = mk('div'), dd = mk('dd', c || null);
+        if (Array.isArray(v)) { v.forEach(([t, h, ti], i) => { if (i) dd.append(', '); dd.append(linkTo(t, h, ti)); }); if (v.length === 1) d.className = 'one'; }
+        else dd.textContent = v;
+        d.append(mk('dt', null, k), dd); dl.append(d);
       });
 
       // Top cast and crew. Anyone who turns up in other club films links to those films.
@@ -495,7 +541,30 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
         .filter(([, u]) => u).forEach(([t, u]) => { const li = mk('li'); const a = mk('a', null, t); a.href = u; a.target = '_blank'; a.rel = 'noopener'; li.append(a); ul.append(li); });
       rel.append(ul);
 
-      el.append(ban, dh, dl, ...people, rel);
+      // Club member's review, if there is one, takes the main column; everything else moves to the rail.
+      const R = (window.ylReviews || {})[f.film_id];
+      if (R) {
+        const body = mk('div', 'yl-fbody has-review');
+        const rv = mk('article', 'yl-review'); rv.setAttribute('aria-labelledby', 'yl-review-h'); rv.id = 'review';
+        const kick = mk('p', 'yl-review-kicker', 'Review');
+        const rh = mk('h2', null, R.title); rh.id = 'yl-review-h';
+        const by = mk('p', 'yl-review-by'); by.append('By ', mk('strong', null, R.author), ' · ');
+        const tm = mk('time', null, R.date); tm.dateTime = R.iso; by.append(tm, ` · ${Math.max(1, Math.ceil(R.words / 200))} min read`);
+        const rb = mk('div', 'yl-review-body'); rb.innerHTML = R.html;
+        rv.append(kick, rh, by, rb);
+        const rail = mk('aside', 'yl-rail'); rail.setAttribute('aria-label', 'Cast, crew and links'); rail.append(...people, rel);
+        body.append(rv, rail);
+        el.append(ban, dh, dl, body);
+        const ld = document.createElement('script'); ld.type = 'application/ld+json';
+        ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'Review', name: R.title,
+          author: { '@type': 'Person', name: R.author }, datePublished: R.iso, reviewBody: rb.textContent,
+          publisher: { '@type': 'Organization', name: '2Yutes, 2Lagoon' },
+          itemReviewed: { '@type': 'Movie', name: f.film, dateCreated: String(f.year), director: { '@type': 'Person', name: f.director } } });
+        document.head.append(ld);
+        ylMeta({ desc: `${R.author}’s review of ${f.film} (${f.year}): “${R.title}.” Plus the 2Yutes, 2Lagoon film club’s score, cast, crew and trailer.` });
+      } else {
+        el.append(ban, dh, dl, ...people, rel);
+      }
     });
   </script>
 
@@ -548,6 +617,13 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const h = t.node().getBBox().height; t.remove(); return h || 14;
     },
     // Horizontal bars: rows of {label, value, note, sub}
+    linkRows(sel, href, label) { // wrap each SVG row group in a link
+      sel.each(function (d) {
+        const a = document.createElementNS('http://www.w3.org/2000/svg', 'a');
+        a.setAttribute('href', href(d)); a.setAttribute('class', 'yl-svglink'); a.setAttribute('aria-label', label(d));
+        this.parentNode.insertBefore(a, this); a.appendChild(this);
+      });
+    },
     hbar(el, rows, opt = {}) {
       const W = Math.max(260, el.clientWidth), rowH = 26;
       const H = rows.length * rowH + 24;
@@ -574,6 +650,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       g.append('text').attr('class', 'muted').attr('x', (d) => x(d.value) + 6).attr('y', rowH / 2).attr('dy', '.35em').text((d) => d.note);
       g.append('rect').attr('x', 0).attr('width', W).attr('height', rowH).attr('fill', 'transparent')
         .on('mousemove', (ev, d) => tip.show(ev, d.label, d.sub)).on('mouseleave', tip.hide);
+      if (opt.href) yl.linkRows(g, opt.href, (d) => d.label);
       if (opt.ref != null) {
         svg.append('line').attr('x1', x(opt.ref)).attr('x2', x(opt.ref)).attr('y1', 0).attr('y2', H - 20)
           .attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 3');
@@ -639,7 +716,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     description: 'Directors with more than one film watched, with their average score.',
     inputs: ['films'],
     fn: (films) => d3.rollups(films, (v) => ({
-      films: v.length, avg_score: Math.round(d3.mean(v, (f) => +f.score) * 100) / 100, titles: v.map((f) => f.film).join(', ')
+      films: v.length, avg_score: Math.round(d3.mean(v, (f) => +f.score) * 100) / 100, titles: v.map((f) => f.film).join(', '), fids: v.map((f) => f.film_id)
     }), (f) => f.director).map(([director, s]) => ({ director, ...s }))
       .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score)
   });
@@ -651,7 +728,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const byId = new Map(films.map((f) => [f.film_id, f]));
       return d3.rollups(dps.filter((c) => byId.has(c.film_id)), (v) => {
         const fs = [...new Map(v.map((c) => [c.film_id, byId.get(c.film_id)])).values()];
-        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', ') };
+        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', '), fids: fs.map((f) => f.film_id) };
       }, (c) => c.cinematographer).map(([cinematographer, s]) => ({ cinematographer, ...s }))
         .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score);
     }
@@ -664,7 +741,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const byId = new Map(films.map((f) => [f.film_id, f]));
       return d3.rollups(cast.filter((c) => byId.has(c.film_id)), (v) => {
         const fs = [...new Map(v.map((c) => [c.film_id, byId.get(c.film_id)])).values()];
-        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', ') };
+        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', '), fids: fs.map((f) => f.film_id) };
       }, (c) => c.actor).map(([actor, s]) => ({ actor, ...s }))
         .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score);
     }
@@ -692,7 +769,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const byId = new Map(films.map((f) => [f.film_id, f]));
       return d3.rollups(cs.filter((c) => byId.has(c.film_id)), (v) => {
         const fs = [...new Map(v.map((c) => [c.film_id, byId.get(c.film_id)])).values()];
-        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', ') };
+        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', '), fids: fs.map((f) => f.film_id) };
       }, (c) => c.composer).map(([composer, s]) => ({ composer, ...s }))
         .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score);
     }
@@ -709,18 +786,19 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     el.textContent = el.dataset.field === 'avg_score' ? yl.f2(v) : el.dataset.field.endsWith('year') ? String(v) : d3.format(',')(v);
   });
 
+  window.ylFilmUrl = (id) => (window.ylSlugs && ylSlugs[id] ? `film/${ylSlugs[id]}/` : `film.html?id=${encodeURIComponent(id)}`);
   const filmRows = () => dash.data('films').data.map((f) => ({ ...f, score: +f.score, year: +f.year, spread: +f.spread, low: +f.low, high: +f.high, ratings: +f.ratings }));
   const filmSub = (f) => `${yl.f2(f.score)} · ${f.year} · ${f.director} · picked by ${f.picker}`;
 
   dash.draw('topten', (el) => {
     if (!yl.ok(el, 'films')) return; el.replaceChildren();
     const rows = filmRows().sort((a, b) => b.score - a.score || a.film.localeCompare(b.film)).slice(0, 10);
-    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f) })));
+    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f), id: f.film_id })), { href: (d) => ylFilmUrl(d.id) });
   });
   dash.draw('bottomten', (el) => {
     if (!yl.ok(el, 'films')) return; el.replaceChildren();
     const rows = filmRows().sort((a, b) => a.score - b.score || a.film.localeCompare(b.film)).slice(0, 10);
-    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f) })), { color: () => dash.colors[3] });
+    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f), id: f.film_id })), { color: () => dash.colors[3], href: (d) => ylFilmUrl(d.id) });
   });
 
   dash.draw('rounds', (el) => {
@@ -786,7 +864,8 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       .attr('cx', (f) => x(f.year)).attr('cy', (f) => y(f.score)).attr('r', 5)
       .attr('fill', dash.colors[0]).attr('fill-opacity', 0.75).attr('stroke', 'var(--color-panel)')
       .on('mousemove', function (ev, f) { d3.select(this).attr('r', 7).attr('fill-opacity', 1); tip.show(ev, `${f.film} (${f.year})`, `${yl.f2(f.score)} · Round ${f.round} · picked by ${f.picker}`); })
-      .on('mouseleave', function () { d3.select(this).attr('r', 5).attr('fill-opacity', 0.75); tip.hide(); });
+      .on('mouseleave', function () { d3.select(this).attr('r', 5).attr('fill-opacity', 0.75); tip.hide(); })
+      .style('cursor', 'pointer').on('click', (ev, f) => { location.href = ylFilmUrl(f.film_id); });
     el.appendChild(el.querySelector('.yl-tip'));
   });
 
@@ -818,6 +897,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     g.append('circle').attr('cx', (d) => x(d.high)).attr('r', 5).attr('fill', dash.colors[0]);
     g.append('rect').attr('x', 0).attr('y', -rowH / 2).attr('width', W).attr('height', rowH).attr('fill', 'transparent')
       .on('mousemove', (ev, d) => tip.show(ev, d.film, `Low ${d.low} · high ${d.high} · group ${yl.f2(d.score)}`)).on('mouseleave', tip.hide);
+    yl.linkRows(g, (d) => ylFilmUrl(d.film_id), (d) => d.film);
     el.appendChild(el.querySelector('.yl-tip'));
   });
 </script>
@@ -856,6 +936,9 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
         const td = document.createElement('td'); if (cls) td.className = cls;
         const text = fmt ? fmt(r[k]) : r[k];
         if (href) { const a = document.createElement('a'); a.href = href(r); a.target = '_blank'; a.rel = 'noopener'; a.className = 'yl-link'; a.textContent = text; td.appendChild(a); }
+        else if (k === 'titles' && Array.isArray(r.fids)) {
+          r.fids.forEach((id, i) => { if (i) td.append(', '); const a = document.createElement('a'); a.href = ylFilmUrl(id); a.className = 'yl-link'; a.textContent = (dash.data('films').data.find((f) => f.film_id === id) || { film: id }).film; td.append(a); });
+        }
         else td.textContent = text;
         tr.appendChild(td);
       });

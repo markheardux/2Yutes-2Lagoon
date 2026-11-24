@@ -136,6 +136,9 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
   .yl td { padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
   .yl td.num, .yl th.num { text-align: right; }
   .yl td.film { font-weight: var(--cds-font-weight-medium); }
+  .yl a.yl-svglink { cursor: pointer; }
+  .yl a.yl-svglink:hover text:first-of-type, .yl a.yl-svglink:focus-visible text:first-of-type { text-decoration: underline; }
+  .yl a.yl-svglink:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
   .yl a.yl-link { color: inherit; text-decoration: underline; text-decoration-color: var(--color-border-line); text-underline-offset: 2px; }
   .yl a.yl-link:hover { text-decoration-color: currentColor; }
   .yl .yl-bar { display: inline-block; height: .5rem; border-radius: 2px; background: var(--yl-accent); vertical-align: middle; margin-right: .4rem; }
@@ -444,6 +447,13 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const h = t.node().getBBox().height; t.remove(); return h || 14;
     },
     // Horizontal bars: rows of {label, value, note, sub}
+    linkRows(sel, href, label) { // wrap each SVG row group in a link
+      sel.each(function (d) {
+        const a = document.createElementNS('http://www.w3.org/2000/svg', 'a');
+        a.setAttribute('href', href(d)); a.setAttribute('class', 'yl-svglink'); a.setAttribute('aria-label', label(d));
+        this.parentNode.insertBefore(a, this); a.appendChild(this);
+      });
+    },
     hbar(el, rows, opt = {}) {
       const W = Math.max(260, el.clientWidth), rowH = 26;
       const H = rows.length * rowH + 24;
@@ -470,6 +480,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       g.append('text').attr('class', 'muted').attr('x', (d) => x(d.value) + 6).attr('y', rowH / 2).attr('dy', '.35em').text((d) => d.note);
       g.append('rect').attr('x', 0).attr('width', W).attr('height', rowH).attr('fill', 'transparent')
         .on('mousemove', (ev, d) => tip.show(ev, d.label, d.sub)).on('mouseleave', tip.hide);
+      if (opt.href) yl.linkRows(g, opt.href, (d) => d.label);
       if (opt.ref != null) {
         svg.append('line').attr('x1', x(opt.ref)).attr('x2', x(opt.ref)).attr('y1', 0).attr('y2', H - 20)
           .attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 3');
@@ -535,7 +546,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     description: 'Directors with more than one film watched, with their average score.',
     inputs: ['films'],
     fn: (films) => d3.rollups(films, (v) => ({
-      films: v.length, avg_score: Math.round(d3.mean(v, (f) => +f.score) * 100) / 100, titles: v.map((f) => f.film).join(', ')
+      films: v.length, avg_score: Math.round(d3.mean(v, (f) => +f.score) * 100) / 100, titles: v.map((f) => f.film).join(', '), fids: v.map((f) => f.film_id)
     }), (f) => f.director).map(([director, s]) => ({ director, ...s }))
       .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score)
   });
@@ -547,7 +558,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const byId = new Map(films.map((f) => [f.film_id, f]));
       return d3.rollups(dps.filter((c) => byId.has(c.film_id)), (v) => {
         const fs = [...new Map(v.map((c) => [c.film_id, byId.get(c.film_id)])).values()];
-        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', ') };
+        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', '), fids: fs.map((f) => f.film_id) };
       }, (c) => c.cinematographer).map(([cinematographer, s]) => ({ cinematographer, ...s }))
         .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score);
     }
@@ -560,7 +571,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const byId = new Map(films.map((f) => [f.film_id, f]));
       return d3.rollups(cast.filter((c) => byId.has(c.film_id)), (v) => {
         const fs = [...new Map(v.map((c) => [c.film_id, byId.get(c.film_id)])).values()];
-        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', ') };
+        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', '), fids: fs.map((f) => f.film_id) };
       }, (c) => c.actor).map(([actor, s]) => ({ actor, ...s }))
         .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score);
     }
@@ -588,7 +599,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const byId = new Map(films.map((f) => [f.film_id, f]));
       return d3.rollups(cs.filter((c) => byId.has(c.film_id)), (v) => {
         const fs = [...new Map(v.map((c) => [c.film_id, byId.get(c.film_id)])).values()];
-        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', ') };
+        return { films: fs.length, avg_score: Math.round(d3.mean(fs, (f) => +f.score) * 100) / 100, titles: fs.map((f) => f.film).join(', '), fids: fs.map((f) => f.film_id) };
       }, (c) => c.composer).map(([composer, s]) => ({ composer, ...s }))
         .filter((d) => d.films > 1).sort((a, b) => b.films - a.films || b.avg_score - a.avg_score);
     }
@@ -605,18 +616,19 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     el.textContent = el.dataset.field === 'avg_score' ? yl.f2(v) : el.dataset.field.endsWith('year') ? String(v) : d3.format(',')(v);
   });
 
+  window.ylFilmUrl = (id) => (window.ylSlugs && ylSlugs[id] ? `film/${ylSlugs[id]}/` : `film.html?id=${encodeURIComponent(id)}`);
   const filmRows = () => dash.data('films').data.map((f) => ({ ...f, score: +f.score, year: +f.year, spread: +f.spread, low: +f.low, high: +f.high, ratings: +f.ratings }));
   const filmSub = (f) => `${yl.f2(f.score)} · ${f.year} · ${f.director} · picked by ${f.picker}`;
 
   dash.draw('topten', (el) => {
     if (!yl.ok(el, 'films')) return; el.replaceChildren();
     const rows = filmRows().sort((a, b) => b.score - a.score || a.film.localeCompare(b.film)).slice(0, 10);
-    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f) })));
+    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f), id: f.film_id })), { href: (d) => ylFilmUrl(d.id) });
   });
   dash.draw('bottomten', (el) => {
     if (!yl.ok(el, 'films')) return; el.replaceChildren();
     const rows = filmRows().sort((a, b) => a.score - b.score || a.film.localeCompare(b.film)).slice(0, 10);
-    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f) })), { color: () => dash.colors[3] });
+    yl.hbar(el, rows.map((f) => ({ label: f.film, value: f.score, note: yl.f2(f.score), sub: filmSub(f), id: f.film_id })), { color: () => dash.colors[3], href: (d) => ylFilmUrl(d.id) });
   });
 
   dash.draw('rounds', (el) => {
@@ -682,7 +694,8 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       .attr('cx', (f) => x(f.year)).attr('cy', (f) => y(f.score)).attr('r', 5)
       .attr('fill', dash.colors[0]).attr('fill-opacity', 0.75).attr('stroke', 'var(--color-panel)')
       .on('mousemove', function (ev, f) { d3.select(this).attr('r', 7).attr('fill-opacity', 1); tip.show(ev, `${f.film} (${f.year})`, `${yl.f2(f.score)} · Round ${f.round} · picked by ${f.picker}`); })
-      .on('mouseleave', function () { d3.select(this).attr('r', 5).attr('fill-opacity', 0.75); tip.hide(); });
+      .on('mouseleave', function () { d3.select(this).attr('r', 5).attr('fill-opacity', 0.75); tip.hide(); })
+      .style('cursor', 'pointer').on('click', (ev, f) => { location.href = ylFilmUrl(f.film_id); });
     el.appendChild(el.querySelector('.yl-tip'));
   });
 
@@ -714,6 +727,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     g.append('circle').attr('cx', (d) => x(d.high)).attr('r', 5).attr('fill', dash.colors[0]);
     g.append('rect').attr('x', 0).attr('y', -rowH / 2).attr('width', W).attr('height', rowH).attr('fill', 'transparent')
       .on('mousemove', (ev, d) => tip.show(ev, d.film, `Low ${d.low} · high ${d.high} · group ${yl.f2(d.score)}`)).on('mouseleave', tip.hide);
+    yl.linkRows(g, (d) => ylFilmUrl(d.film_id), (d) => d.film);
     el.appendChild(el.querySelector('.yl-tip'));
   });
 </script>
@@ -721,7 +735,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
 <script>
   // Sortable tables and the search box.
   window.ylSort = { critictable: { key: 'avg_given', dir: -1 }, dirtable: { key: 'films', dir: -1 }, actortable: { key: 'films', dir: -1 }, dptable: { key: 'films', dir: -1 }, composertable: { key: 'films', dir: -1 }, genretable: { key: 'films', dir: -1 }, filmtable: { key: 'score', dir: -1 } };
-  window.ylQuery = { text: (new URLSearchParams(location.search).get('q') || '').trim().toLowerCase(), round: '', genre: new URLSearchParams(location.search).get('genre') || '' };
+  const ylQS = new URLSearchParams(location.search); window.ylQuery = { text: (ylQS.get('q') || '').trim().toLowerCase(), round: ylQS.get('round') || '', genre: ylQS.get('genre') || '', year: ylQS.get('year') || '', director: ylQS.get('director') || '', picker: ylQS.get('picker') || '' };
   const numeric = new Set(['ratings', 'avg_given', 'vs_room', 'fives', 'films', 'avg_score', 'year', 'round', 'score', 'share']);
 
   document.querySelectorAll('table').forEach((table) => {
@@ -752,6 +766,9 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
         const td = document.createElement('td'); if (cls) td.className = cls;
         const text = fmt ? fmt(r[k]) : r[k];
         if (href) { const a = document.createElement('a'); a.href = href(r); if (!/^film\//.test(a.getAttribute('href'))) { a.target = '_blank'; a.rel = 'noopener'; } a.className = 'yl-link'; a.textContent = text; td.appendChild(a); }
+        else if (k === 'titles' && Array.isArray(r.fids)) {
+          r.fids.forEach((id, i) => { if (i) td.append(', '); const a = document.createElement('a'); a.href = ylFilmUrl(id); a.className = 'yl-link'; a.textContent = (dash.data('films').data.find((f) => f.film_id === id) || { film: id }).film; td.append(a); });
+        }
         else td.textContent = text;
         tr.appendChild(td);
       });
@@ -791,16 +808,28 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     sel.onchange = () => { ylQuery.round = sel.value; dash.draw('filmtable'); };
   });
   window.ylGenreHead = (n) => {
-    const g = ylQuery.genre, t = document.getElementById('yl-films-title'), gt = document.getElementById('yl-genre-take'), at = document.getElementById('yl-all-take');
-    t.textContent = g || 'All films'; gt.hidden = !g; at.hidden = !!g;
-    if (g) { gt.replaceChildren(`${n} ${n === 1 ? 'film' : 'films'} tagged ${g} on TMDB, ranked by the club’s score. `); const a = document.createElement('a'); a.href = 'films.html'; a.className = 'yl-link'; a.textContent = 'See all films'; a.onclick = (e) => { e.preventDefault(); ylSetGenre(''); }; gt.append(a); }
-    document.title = (g ? `${g} films` : 'All films') + ' · 2Yutes, 2Lagoon';
+    const Q = ylQuery, g = Q.genre, t = document.getElementById('yl-films-title'), gt = document.getElementById('yl-genre-take'), at = document.getElementById('yl-all-take');
+    const parts = [Q.director && `Directed by ${Q.director}`, Q.picker && `Picked by ${Q.picker}`, Q.year && `Films from ${Q.year}`, g && (Q.director || Q.picker || Q.year ? `${g}` : g), Q.round && `Round ${Q.round}`].filter(Boolean);
+    const filtered = !!(g || Q.year || Q.director || Q.picker || (Q.round && ylQS.get('round')));
+    const head = filtered ? parts.join(' · ') : 'All films';
+    t.textContent = head; gt.hidden = !filtered; at.hidden = filtered;
+    if (filtered) {
+      const what = `${n} ${n === 1 ? 'film' : 'films'}`;
+      const lead = Q.director ? `${what} directed by ${Q.director}` : Q.picker ? `${what} picked by ${Q.picker}` : Q.year ? `${what} from ${Q.year}` : g ? `${what} tagged ${g} on TMDB` : `${what} from Round ${Q.round}`;
+      gt.replaceChildren(`${lead}, ranked by the club’s score. `);
+      const a = document.createElement('a'); a.href = 'films.html'; a.className = 'yl-link'; a.textContent = 'See all films';
+      a.onclick = (e) => { e.preventDefault(); ylSetGenre(''); }; gt.append(a);
+    }
+    document.title = (filtered ? (g && parts.length === 1 ? `${g} films` : head) : 'All films') + ' · 2Yutes, 2Lagoon';
+    const qs = new URLSearchParams(); ['director', 'picker', 'year', 'genre'].forEach((k) => { if (Q[k]) qs.set(k, Q[k]); }); if (Q.round && ylQS.get('round')) qs.set('round', Q.round);
     ylMeta({ title: document.title,
-      desc: g ? `${n} ${g.toLowerCase()} ${n === 1 ? 'film' : 'films'} watched by the 2Yutes, 2Lagoon film club, ranked by the club’s score.` : ylMetaDefault.desc,
-      url: g ? `https://www.2yutes2lagoon.com/films.html?genre=${encodeURIComponent(g)}` : ylMetaDefault.url });
+      desc: filtered ? `${n} ${n === 1 ? 'film' : 'films'} ${Q.director ? `directed by ${Q.director}` : Q.picker ? `picked by ${Q.picker}` : Q.year ? `from ${Q.year}` : g ? g.toLowerCase() : `from Round ${Q.round}`} watched by the 2Yutes, 2Lagoon film club, ranked by the club’s score.` : ylMetaDefault.desc,
+      url: filtered ? `https://www.2yutes2lagoon.com/films.html?${qs}` : ylMetaDefault.url });
   };
   window.ylSetGenre = (g) => {
-    ylQuery.genre = g; document.querySelectorAll('.yl-genrepick').forEach((s) => { s.value = g; });
+    ylQuery.genre = g; ylQuery.year = ylQuery.director = ylQuery.picker = ''; ylQS.delete('round');
+    if (!g) { ylQuery.round = ''; document.querySelectorAll('[data-draw=roundpick]').forEach((x) => { x.value = ''; }); }
+    document.querySelectorAll('.yl-genrepick').forEach((s) => { s.value = g; });
     history.replaceState(null, '', g ? `films.html?genre=${encodeURIComponent(g)}` : 'films.html');
     if (window.ylNavMark) ylNavMark(g); dash.draw('filmtable');
   };
@@ -809,9 +838,11 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
     const d = dash.data('films'); if (d.status !== 'ok') { tb.replaceChildren(); return; }
     const q = ylQuery.text;
     const g = dash.data('genres'); const inGenre = ylQuery.genre && g.status === 'ok' ? new Set(g.data.filter((r) => r.genre === ylQuery.genre).map((r) => r.film_id)) : null;
-    ylGenreHead(inGenre ? inGenre.size : 0);
-    const rows = d.data.filter((f) => (!inGenre || inGenre.has(f.film_id)) && (!ylQuery.round || String(f.round) === ylQuery.round) &&
+    const Q = ylQuery;
+    const rows = d.data.filter((f) => (!inGenre || inGenre.has(f.film_id)) && (!Q.round || String(f.round) === Q.round) &&
+      (!Q.year || String(f.year) === Q.year) && (!Q.director || f.director === Q.director) && (!Q.picker || f.picker === Q.picker) &&
       (!q || `${f.film} ${f.director} ${f.picker}`.toLowerCase().includes(q)));
+    ylGenreHead(rows.length);
     const tmdb = (f) => (f.tmdb_id ? `https://www.themoviedb.org/movie/${encodeURIComponent(f.tmdb_id)}` : `https://www.themoviedb.org/search/movie?query=${encodeURIComponent(f.film)}`);
     fill(tb, sorted(rows, 'filmtable'), [['film', null, 'film', (f) => `film/${ylSlugs[f.film_id]}/`], ['year', null, 'num'], ['director', null, 'yl-hide-narrow'], ['picker'], ['round', null, 'num yl-hide-narrow'], ['date', (v) => d3.utcFormat('%b %-d, %Y')(new Date(v)), 'yl-hide-narrow'], ['score', yl.f2, 'num']], 'film_id');
   });
