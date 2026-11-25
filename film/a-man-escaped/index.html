@@ -289,7 +289,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
             if (s > score) { score = s; why = [k, v]; }
           }
           return { f, score, why };
-        }).filter((h) => h.score > 0).sort((a, b) => b.score - a.score || b.f.score - a.f.score).slice(0, 8);
+        }).filter((h) => h.score > 0).sort((a, b) => b.score - a.score || (b.f.score ?? 0) - (a.f.score ?? 0)).slice(0, 8);
       };
       const render = () => {
         const q = input.value.trim(); list.replaceChildren(); sel = -1;
@@ -303,7 +303,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
           const tx = document.createElement('div');
           const t = document.createElement('div'); t.className = 'yl-ss-t'; t.textContent = h.f.title;
           const m = document.createElement('div'); m.className = 'yl-ss-m';
-          m.append(`${h.f.year} · ${h.f.director} · `); const sc = document.createElement('span'); sc.className = 'yl-ss-s'; sc.textContent = `${h.f.score.toFixed(2)}/5`; m.append(sc);
+          m.append(`${h.f.year} · ${h.f.director} · `); const sc = document.createElement('span'); sc.className = 'yl-ss-s'; sc.textContent = h.f.score == null ? 'not yet rated' : `${h.f.score.toFixed(2)}/5`; m.append(sc);
           if (h.why) { const w = document.createElement('div'); w.className = 'yl-ss-m'; w.append(`${h.why[0]}: `); const b = document.createElement('b'); b.textContent = h.why[1]; w.append(b); tx.append(t, m, w); } else tx.append(t, m);
           a.append(im, tx); li.append(a); list.append(li);
         });
