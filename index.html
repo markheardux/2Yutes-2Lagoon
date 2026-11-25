@@ -396,39 +396,6 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
   </section>
 
   <style>
-    .yl-week { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); background: #161616; color: #fff; border-radius: var(--cds-radius); overflow: hidden; margin: var(--cds-gap-lg) 0 var(--cds-gap-md); }
-    @media (max-width: 48rem) { .yl-week { grid-template-columns: minmax(0, 1fr); } }
-    .yl-week-img { display: block; min-height: 16rem; }
-    .yl-week-img img { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 16 / 9; }
-    .yl-week-text { padding: clamp(1.5rem, 3.5vw, 2.5rem); display: flex; flex-direction: column; justify-content: center; }
-    .yl-week-kicker { font-size: var(--cds-font-size-caption); letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.7); margin: 0 0 .6rem; }
-    .yl-week-kicker b { color: #fff; font-weight: var(--cds-font-weight-medium); }
-    .yl-week h2 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05; margin: 0 0 .5rem; color: #fff; }
-    .yl-week h2 a { color: inherit; text-decoration: none; }
-    .yl-week h2 a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .1em; }
-    .yl-week-meta { margin: 0 0 .9rem; color: rgba(255,255,255,.85); }
-    .yl-week-sofar { margin: 0 0 1.25rem; font-size: var(--cds-font-size-body); color: rgba(255,255,255,.7); }
-    .yl-week-sofar strong { color: #fff; font-weight: var(--cds-font-weight-medium); }
-    .yl-week-btns { display: flex; flex-wrap: wrap; gap: .5rem; }
-    .yl-week-btn { display: inline-flex; align-items: center; gap: .45rem; padding: .55rem 1rem; border-radius: 999px; background: #fff; color: #111; text-decoration: none; font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); }
-    .yl-week-btn:hover { background: #e9e9e9; }
-    .yl-week-btn.ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.85); }
-    .yl-week-btn.ghost:hover { background: rgba(255,255,255,.15); }
-    .yl-week-btn svg { width: .8em; height: .8em; }
-    .yl-week a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-  </style>
-  <section class="yl-week" aria-labelledby="yl-week-h">
-    <a class="yl-week-img" href="film/la-strada/" tabindex="-1"><img src="images/la-strada-week.jpg" alt="Still from La strada (1954): Gelsomina in clown make-up and a bowler hat, the strongman Zampanò and the Fool look up together under the circus tent, in black and white." style="object-position:center 30%" fetchpriority="high"></a>
-    <div class="yl-week-text">
-      <p class="yl-week-kicker"><b>This week’s movie</b> · Friday, November 20</p>
-      <h2 id="yl-week-h"><a href="film/la-strada/">La strada</a></h2>
-      <p class="yl-week-meta">1954 · Federico Fellini · picked by Uncle BoBo</p>
-      <p class="yl-week-sofar">Club score so far: <strong>4.50</strong> from 1 rating</p>
-      <div class="yl-week-btns"><a class="yl-week-btn" href="https://www.youtube.com/watch?v=GrE7syApSkA" target="_blank" rel="noopener"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 2l7 4-7 4z" fill="currentColor"/></svg>Watch trailer</a><a class="yl-week-btn ghost" href="film/la-strada/#review">Read review <span aria-hidden="true">→</span></a></div>
-    </div>
-  </section>
-
-  <style>
     .yl-hero { position: relative; margin: 0 0 var(--cds-gap-xl); border-radius: var(--cds-radius); overflow: hidden; background: #111; aspect-ratio: 21 / 9; max-height: 30rem; width: 100%; }
     @media (max-width: 40rem) { .yl-hero { aspect-ratio: 4 / 3; } }
     .yl-hero-track { position: absolute; inset: 0; }
@@ -549,6 +516,39 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       go(st.i); restart();
     });
   </script>
+
+  <style>
+    .yl-week { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); background: #161616; color: #fff; border-radius: var(--cds-radius); overflow: hidden; margin: var(--cds-gap-md) 0 var(--cds-gap-lg); }
+    @media (max-width: 48rem) { .yl-week { grid-template-columns: minmax(0, 1fr); } }
+    .yl-week-img { display: block; min-height: 16rem; }
+    .yl-week-img img { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 16 / 9; }
+    .yl-week-text { padding: clamp(1.5rem, 3.5vw, 2.5rem); display: flex; flex-direction: column; justify-content: center; }
+    .yl-week-kicker { font-size: var(--cds-font-size-caption); letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.7); margin: 0 0 .6rem; }
+    .yl-week-kicker b { color: #fff; font-weight: var(--cds-font-weight-medium); }
+    .yl-week h2 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.05; margin: 0 0 .5rem; color: #fff; }
+    .yl-week h2 a { color: inherit; text-decoration: none; }
+    .yl-week h2 a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .1em; }
+    .yl-week-meta { margin: 0 0 .9rem; color: rgba(255,255,255,.85); }
+    .yl-week-sofar { margin: 0 0 1.25rem; font-size: var(--cds-font-size-body); color: rgba(255,255,255,.7); }
+    .yl-week-sofar strong { color: #fff; font-weight: var(--cds-font-weight-medium); }
+    .yl-week-btns { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .yl-week-btn { display: inline-flex; align-items: center; gap: .45rem; padding: .55rem 1rem; border-radius: 999px; background: #fff; color: #111; text-decoration: none; font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); }
+    .yl-week-btn:hover { background: #e9e9e9; }
+    .yl-week-btn.ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.85); }
+    .yl-week-btn.ghost:hover { background: rgba(255,255,255,.15); }
+    .yl-week-btn svg { width: .8em; height: .8em; }
+    .yl-week a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+  </style>
+  <section class="yl-week" aria-labelledby="yl-week-h">
+    <a class="yl-week-img" href="film/la-strada/" tabindex="-1"><img src="images/la-strada-week.jpg" alt="Still from La strada (1954): Gelsomina in clown make-up and a bowler hat, the strongman Zampanò and the Fool look up together under the circus tent, in black and white." style="object-position:center 30%" fetchpriority="high"></a>
+    <div class="yl-week-text">
+      <p class="yl-week-kicker"><b>This week’s movie</b> · Friday, November 20</p>
+      <h2 id="yl-week-h"><a href="film/la-strada/">La strada</a></h2>
+      <p class="yl-week-meta">1954 · Federico Fellini · picked by Uncle BoBo</p>
+      <p class="yl-week-sofar">Club score so far: <strong>4.50</strong> from 1 rating</p>
+      <div class="yl-week-btns"><a class="yl-week-btn" href="https://www.youtube.com/watch?v=GrE7syApSkA" target="_blank" rel="noopener"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 2l7 4-7 4z" fill="currentColor"/></svg>Watch trailer</a><a class="yl-week-btn ghost" href="film/la-strada/#review">Read review <span aria-hidden="true">→</span></a></div>
+    </div>
+  </section>
 
   <style>
     .yl-revlist { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
