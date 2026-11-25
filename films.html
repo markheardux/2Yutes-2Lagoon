@@ -9,13 +9,13 @@
 </script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>All films · 2Yutes, 2Lagoon</title>
-<meta name="description" content="Every film the 2Yutes, 2Lagoon film club has watched, all 164 ranked by the club’s score. Search by title, director or picker, or filter by round and genre.">
+<title>All films · 2 Yutes, 2 Lagoon</title>
+<meta name="description" content="Every film the 2 Yutes, 2 Lagoon film club has watched, all 164 ranked by the club’s score. Search by title, director or picker, or filter by round and genre.">
 <link rel="canonical" href="https://www.2yutes2lagoon.com/films.html">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="2Yutes, 2Lagoon">
-<meta property="og:title" content="All films · 2Yutes, 2Lagoon">
-<meta property="og:description" content="Every film the 2Yutes, 2Lagoon film club has watched, all 164 ranked by the club’s score. Search by title, director or picker, or filter by round and genre.">
+<meta property="og:site_name" content="2 Yutes, 2 Lagoon">
+<meta property="og:title" content="All films · 2 Yutes, 2 Lagoon">
+<meta property="og:description" content="Every film the 2 Yutes, 2 Lagoon film club has watched, all 164 ranked by the club’s score. Search by title, director or picker, or filter by round and genre.">
 <meta property="og:url" content="https://www.2yutes2lagoon.com/films.html">
 <meta property="og:image" content="https://www.2yutes2lagoon.com/images/raging-bull.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -23,7 +23,7 @@
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script>
-  window.ylMetaDefault = { title: document.title, desc: "Every film the 2Yutes, 2Lagoon film club has watched, all 164 ranked by the club’s score. Search by title, director or picker, or filter by round and genre.", url: "https://www.2yutes2lagoon.com/films.html" };
+  window.ylMetaDefault = { title: document.title, desc: "Every film the 2 Yutes, 2 Lagoon film club has watched, all 164 ranked by the club’s score. Search by title, director or picker, or filter by round and genre.", url: "https://www.2yutes2lagoon.com/films.html" };
   window.ylMeta = (m) => {
     const set = (sel, attr, v) => { const e = document.querySelector(sel); if (e && v) e.setAttribute(attr, v); };
     if (m.title) { document.title = m.title; set('meta[property="og:title"]', 'content', m.title); }
@@ -215,7 +215,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
   <div class="yl-scrim" aria-hidden="true"></div>
   <div class="yl-drawer" id="yl-drawer" role="dialog" aria-modal="true" aria-label="Menu">
     <div class="yl-drawer-head">
-      <p class="yl-drawer-title">2Yutes, 2Lagoon</p>
+      <p class="yl-drawer-title">2 Yutes, 2 Lagoon</p>
       <button type="button" class="yl-drawer-close" aria-label="Close menu">×</button>
     </div>
     <ul>
@@ -385,7 +385,7 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
 
 <main id="main">
   <header class="yl-head" id="top">
-    <p class="yl-kicker"><a class="yl-home-link" href="index.html">2Yutes, 2Lagoon</a></p>
+    <p class="yl-kicker"><a class="yl-home-link" href="index.html">2 Yutes, 2 Lagoon</a></p>
     <h1 class="yl-title" id="yl-films-title">All films</h1>
     <p class="yl-take" id="yl-genre-take" hidden></p>
     <p class="yl-take" id="yl-all-take">All <b data-draw="kpi" data-source="summary" data-field="films" data-row="0" class="dash-skeleton">—</b> films from <b data-draw="kpi" data-source="summary" data-field="rounds" data-row="0" class="dash-skeleton">—</b> rounds, ranked by the club’s score. Search by title, director or picker, pick a round, or click a column to sort.</p>
@@ -836,10 +836,10 @@ body{margin:0;padding:24px 16px 48px;background:var(--color-bg);color:var(--colo
       const a = document.createElement('a'); a.href = 'films.html'; a.className = 'yl-link'; a.textContent = 'See all films';
       a.onclick = (e) => { e.preventDefault(); ylSetGenre(''); }; gt.append(a);
     }
-    document.title = (filtered ? (g && parts.length === 1 ? `${g} films` : head) : 'All films') + ' · 2Yutes, 2Lagoon';
+    document.title = (filtered ? (g && parts.length === 1 ? `${g} films` : head) : 'All films') + ' · 2 Yutes, 2 Lagoon';
     const qs = new URLSearchParams(); ['director', 'picker', 'year', 'genre'].forEach((k) => { if (Q[k]) qs.set(k, Q[k]); }); if (Q.round && ylQS.get('round')) qs.set('round', Q.round);
     ylMeta({ title: document.title,
-      desc: filtered ? `${n} ${n === 1 ? 'film' : 'films'} ${Q.director ? `directed by ${Q.director}` : Q.picker ? `picked by ${Q.picker}` : Q.year ? `from ${Q.year}` : g ? g.toLowerCase() : `from Round ${Q.round}`} watched by the 2Yutes, 2Lagoon film club, ranked by the club’s score.` : ylMetaDefault.desc,
+      desc: filtered ? `${n} ${n === 1 ? 'film' : 'films'} ${Q.director ? `directed by ${Q.director}` : Q.picker ? `picked by ${Q.picker}` : Q.year ? `from ${Q.year}` : g ? g.toLowerCase() : `from Round ${Q.round}`} watched by the 2 Yutes, 2 Lagoon film club, ranked by the club’s score.` : ylMetaDefault.desc,
       url: filtered ? `https://www.2yutes2lagoon.com/films.html?${qs}` : ylMetaDefault.url });
   };
   window.ylSetGenre = (g) => {
